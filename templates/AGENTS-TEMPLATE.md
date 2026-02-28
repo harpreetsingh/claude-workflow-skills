@@ -129,6 +129,16 @@ npm run build                  # MUST pass
 
 ---
 
+## CLI Design Principles
+
+Every user-facing feature should be accessible via CLI, not just UI/API.
+
+- Every command supports `--json` for machine/agent consumption
+- Human-friendly output by default, structured JSON when piped or flagged
+- CLI is a first-class interface, not an afterthought
+
+---
+
 ## Verification Entry Points
 
 Manual testing surfaces for sprint verification. `/hs-sw-sprint-exec-plan`
