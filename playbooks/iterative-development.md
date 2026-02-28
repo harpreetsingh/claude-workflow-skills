@@ -7,7 +7,7 @@ shipped code using Claude Code skills and agents.
 
 ```
 Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship
-   /plan-draft    /plan-review ×4-5   /beads-create   implement   /land
+   /plan-draft    /plan-review ×4-5   /beads-create   implement   /land-the-plane
                   /fresh-eyes         /beads-review    /fresh-eyes
 ```
 
@@ -104,7 +104,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Steps
 
-1. `/land` — run quality gates, commit in logical groups, push
+1. `/land-the-plane` — run quality gates, commit in logical groups, push
 2. Verify CI passes
 3. Verify deployment succeeds
 
@@ -137,6 +137,6 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 | UI feels rough | `/ux-polish` |
 | Want a deep bug sweep | `bug-hunter` agent |
 | Want to review other agents' work | `peer-reviewer` agent |
-| Ready to commit and push | `/land` |
+| Ready to commit and push | `/land-the-plane` |
 | Ending a session | `/stash` |
 | Starting a session | `/hydrate` |

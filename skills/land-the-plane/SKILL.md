@@ -1,5 +1,5 @@
 ---
-name: land
+name: land-the-plane
 description: Run quality gates, commit changes in logical groups, sync beads, and push to remote
 argument-hint: [commit-message-hint]
 disable-model-invocation: true

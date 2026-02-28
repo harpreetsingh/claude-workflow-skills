@@ -31,7 +31,7 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 | `/ux-polish [path]` | Deep UI/UX scrutiny targeting Stripe-level quality |
 | `/stash [focus]` | Save session context before compaction or ending a session |
 | `/hydrate` | Restore session context from the most recent stash |
-| `/land [hint]` | Quality gates + logical commits + push |
+| `/land-the-plane [hint]` | Quality gates + logical commits + push |
 
 ### Agents (autonomous subagents)
 
@@ -79,7 +79,7 @@ In any Claude Code session:
 /beads-review                 # Optimize bead structure
 /test-coverage backend/       # Find test gaps
 /ux-polish                    # Full UX audit
-/land "feat: add dashboard"   # Quality gates + commit + push
+/land-the-plane "feat: add dashboard"   # Quality gates + commit + push
 /stash "working on auth flow"  # Save context before compaction
 /hydrate                       # Restore context in new session
 ```
@@ -97,7 +97,7 @@ A typical development cycle:
 5. **Test** — `/test-coverage`
 6. **Polish** — `/ux-polish`
 7. **Verify** — `/fresh-eyes`
-8. **Ship** — `/land`
+8. **Ship** — `/land-the-plane`
 9. **Pause** — `/stash` (before compaction or ending session)
 10. **Resume** — `/hydrate` (in new session)
 
