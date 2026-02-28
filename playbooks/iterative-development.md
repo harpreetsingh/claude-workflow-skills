@@ -6,9 +6,10 @@ shipped code using Claude Code skills and agents.
 ## Overview
 
 ```
-Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship
-   /plan-draft    /plan-review ×4-5   /beads-create   implement   /land-the-plane
-                  /fresh-eyes         /beads-review    /fresh-eyes
+Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship ──→ Docs
+   /plan-draft    /plan-review ×4-5   /beads-create   implement   /land-the-plane  /release-docs
+                  /fresh-eyes         /beads-review    /fresh-eyes                  /docs-harvest
+                                                       /capture (anytime)
 ```
 
 ---
@@ -110,7 +111,52 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ---
 
-## Phase 6: Session Management
+## Phase 6: Content Capture (Continuous)
+
+**Input:** Interesting discoveries during any phase
+**Output:** Captured insights in `~/content/captures/`
+
+### In-flow capture
+
+- `/capture "workflow skills are just markdown files"` — captures the insight
+  with full context from the current conversation. Takes seconds, doesn't
+  interrupt your work.
+
+### Drafting a blog
+
+- `/blog-draft ~/content/captures/2026-02-28-workflow-skills.md` — draft from
+  specific captures
+- `/blog-draft devtools` — draft from all captures tagged "devtools"
+- Source captures move to `captures/done/` after drafting
+
+### Maintenance
+
+- `/content-index` — rebuild `~/content/index.md` grouped by project and topic
+
+---
+
+## Phase 7: Release Documentation
+
+**Input:** All artifacts from the release (PLANs, PRDs, decisions, closed tickets)
+**Output:** Clean internal and external documentation
+
+### Internal engineering docs
+
+- `/release-docs v0.17b` — synthesizes everything into:
+  - `architecture.md` — how it works, key decisions with rationale
+  - `api.md` — endpoints, schemas, auth
+  - `data-model.md` — tables, migrations, relationships
+  - `what-shipped.md` — planned vs actual, known limitations
+  - `lessons.md` — what worked, what didn't
+
+### External user docs
+
+- `/docs-harvest docs/prds/versions/v0.17/` — extracts user-facing content into
+  `docs/site/` (concepts, guides, architecture, reference)
+
+---
+
+## Phase 8: Session Management
 
 ### Pausing work
 
@@ -138,5 +184,10 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 | Want a deep bug sweep | `bug-hunter` agent |
 | Want to review other agents' work | `peer-reviewer` agent |
 | Ready to commit and push | `/land-the-plane` |
+| Found something interesting mid-session | `/capture` |
+| Ready to draft a blog from captures | `/blog-draft` |
+| Need to browse captured content | `/content-index` |
+| Release done, need internal eng docs | `/release-docs` |
+| Release done, need external user docs | `/docs-harvest` |
 | Ending a session | `/stash` |
 | Starting a session | `/hydrate` |

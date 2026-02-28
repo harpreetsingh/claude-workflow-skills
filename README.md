@@ -29,6 +29,11 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 | `/beads-review` | Optimize existing beads for correctness and structure |
 | `/test-coverage [dir]` | Find test gaps and create beads for missing tests |
 | `/ux-polish [path]` | Deep UI/UX scrutiny targeting Stripe-level quality |
+| `/capture [description]` | Quickly capture an interesting insight mid-session for future content |
+| `/blog-draft [files-or-topic]` | Draft a v1 blog post from captured content, move sources to done |
+| `/content-index` | Rebuild the content index grouped by project and topic |
+| `/docs-harvest [source-dir]` | Extract external-facing docs from decision docs and PRDs |
+| `/release-docs [version]` | Synthesize internal engineering docs for a release from all artifacts |
 | `/stash [focus]` | Save session context before compaction or ending a session |
 | `/hydrate` | Restore session context from the most recent stash |
 | `/land-the-plane [hint]` | Quality gates + logical commits + push |
@@ -100,6 +105,11 @@ A typical development cycle:
 8. **Ship** — `/land-the-plane`
 9. **Pause** — `/stash` (before compaction or ending session)
 10. **Resume** — `/hydrate` (in new session)
+
+11. **Capture** — `/capture "interesting insight"` (mid-session, anytime)
+12. **Blog** — `/blog-draft captures/file.md` (when ready to write)
+13. **Release docs** — `/release-docs v0.17b` (at release close)
+14. **External docs** — `/docs-harvest docs/prds/versions/v0.17/` (at release close)
 
 See `playbooks/iterative-development.md` for the full workflow guide.
 
