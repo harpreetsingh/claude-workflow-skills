@@ -4,10 +4,23 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 
 ## What's included
 
+### Templates
+
+| File | Purpose |
+|------|---------|
+| `templates/PLAN-TEMPLATE.md` | Canonical plan structure — scales from feature to architecture |
+
+### Playbooks
+
+| File | Purpose |
+|------|---------|
+| `playbooks/iterative-development.md` | Full workflow from decision docs → shipped code |
+
 ### Skills (slash commands)
 
 | Command | Purpose |
 |---------|---------|
+| `/plan-draft [source-dir]` | Synthesize decision docs into a structured PLAN v1 |
 | `/plan-review [file]` | Iteratively review and improve a markdown plan |
 | `/fresh-eyes [path]` | Review recent code changes for bugs with fresh eyes |
 | `/beads-create [file]` | Create epics/tasks/subtasks with dependencies from a plan |
@@ -56,6 +69,7 @@ cd claude-workflow-skills
 In any Claude Code session:
 
 ```
+/plan-draft docs/decisions/    # Synthesize docs into PLAN v1
 /plan-review PLAN.md          # One round of plan improvement
 /plan-review PLAN.md          # Another round (repeat until steady state)
 /fresh-eyes                   # Review recent changes for bugs
@@ -74,15 +88,18 @@ Agents are invoked automatically by Claude Code when it recognizes a matching ta
 
 A typical development cycle:
 
-1. **Plan** — Write `PLAN.md`, then `/plan-review PLAN.md` × 4-5 rounds
-2. **Decompose** — `/beads-create PLAN.md`, then `/beads-review`
-3. **Implement** — Work through beads
-4. **Test** — `/test-coverage`
-5. **Polish** — `/ux-polish`
-6. **Verify** — `/fresh-eyes`
-7. **Ship** — `/land`
-8. **Pause** — `/stash` (before compaction or ending session)
-9. **Resume** — `/hydrate` (in new session)
+1. **Draft** — `/plan-draft docs/decisions/` or write `PLAN.md` from `templates/PLAN-TEMPLATE.md`
+2. **Refine** — `/plan-review PLAN.md` × 4-5 rounds until convergence
+3. **Decompose** — `/beads-create PLAN.md`, then `/beads-review`
+4. **Implement** — Work through beads
+5. **Test** — `/test-coverage`
+6. **Polish** — `/ux-polish`
+7. **Verify** — `/fresh-eyes`
+8. **Ship** — `/land`
+9. **Pause** — `/stash` (before compaction or ending session)
+10. **Resume** — `/hydrate` (in new session)
+
+See `playbooks/iterative-development.md` for the full workflow guide.
 
 ## Requirements
 
