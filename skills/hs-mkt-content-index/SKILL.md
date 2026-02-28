@@ -1,5 +1,5 @@
 ---
-name: hs-mk-content-index
+name: hs-mkt-content-index
 description: Rebuild the content index grouped by project, topic, and status
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: hs-mk-blog-draft
+name: hs-mkt-blog-draft
 description: Draft a v1 blog post from specific captured content, then move sources to done
 argument-hint: [capture-files-or-topic]
 ---

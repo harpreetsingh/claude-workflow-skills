@@ -6,15 +6,15 @@ shipped code using Claude Code skills and agents.
 ## Overview
 
 ```
-Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship ──→ Docs
-   /hs-sw-plan-draft  /hs-sw-plan-review  /hs-sw-beads-create  implement  /hs-sw-land-the-plane  /hs-sw-docs-gen-int
-                       /hs-sw-fresh-eyes   /hs-sw-beads-review  /hs-sw-fresh-eyes                  /hs-sw-docs-gen-ext
-                                                                 /hs-mk-capture (anytime)
+Decision Docs → PLAN v1 → PLAN vN → Beads → Sprint Exec Plan → Go → Ship → Docs
+  /hs-sw-plan-draft  /hs-sw-plan-review  /hs-sw-beads-create  /hs-sw-sprint-exec-plan  /hs-sw-sprint-go  /hs-sw-land-the-plane  /hs-sw-docs-gen-int
+                                          /hs-sw-beads-review                                              /hs-sw-docs-gen-ext
+                                                                /hs-mkt-capture (anytime)
 ```
 
 ---
 
-## Phase 1: Plan Conception
+## Phase 1: Create Plan — Conception
 
 **Input:** Decision docs, PRDs, notes, brainstorm artifacts
 **Output:** A PLAN.md v1 following the canonical template
@@ -34,7 +34,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ---
 
-## Phase 2: Plan Improvement
+## Phase 2: Create Plan — Improvement
 
 **Input:** PLAN.md v1
 **Output:** PLAN.md at steady state (vN, typically N=4-5)
@@ -44,7 +44,6 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 1. `/hs-sw-plan-review PLAN.md` — one round of deep review
 2. Review the suggestions. Accept, reject, or discuss.
 3. Repeat until suggestions become incremental (Claude will signal convergence)
-4. `/hs-sw-fresh-eyes PLAN.md` — final scan for errors, contradictions, confusion
 
 ### Convergence signals
 
@@ -54,7 +53,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ---
 
-## Phase 3: Beads Creation
+## Phase 3: Create Tickets — Beads
 
 **Input:** PLAN.md at steady state
 **Output:** A full bead hierarchy with dependencies
@@ -75,26 +74,47 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ---
 
-## Phase 4: Implementation
+## Phase 3.5: Execute Tickets (Optional)
 
-**Input:** Beads ready to work
-**Output:** Working code
+**Input:** Beads with dependencies
+**Output:** Multi-agent sprint execution
+
+Use when: 5+ tickets, want parallel multi-agent execution.
+Skip when: <5 tickets, single domain, hands-on preferred.
 
 ### Steps
+
+1. `/hs-sw-sprint-exec-plan` — analyze beads into waves, label cost tiers, design team topology
+2. Review the sprint brief. Adjust waves, tiers, or topology as needed.
+3. `/hs-sw-sprint-go` — launch director + workers. You can walk away.
+4. Director manages wave transitions, role switching, and quality gates autonomously.
+
+---
+
+## Phase 4: Implementation
+
+**Input:** Beads ready to work (manual) or sprint running (automated)
+**Output:** Working code
+
+### Steps (manual — skip if using sprint execution)
 
 1. `bd ready` — find the next unblocked bead
 2. `bd update <id> --status in_progress` — claim it
 3. Implement
-4. `/hs-sw-fresh-eyes` — check your own work
-5. `bd close <id>` — mark done
-6. Repeat
+4. `bd close <id>` — mark done
+5. Repeat
 
-### Quality checks during implementation
+---
 
-- `/hs-sw-test-coverage` — run after each major feature to identify test gaps early
-- `/hs-sw-ux-polish` — run after UI work, before it accumulates
-- Use the `hs-sw-bug-hunter` agent periodically for a deep sweep
-- Use the `hs-sw-peer-reviewer` agent to review work from other agents/sessions
+## Quality Tools (Usable Anytime)
+
+These tools can be used during any phase — planning, implementation, or post-ship.
+
+- `/hs-sw-fresh-eyes [path]` — review code or plans for bugs, errors, contradictions
+- `/hs-sw-test-coverage [dir]` — find test gaps and create beads for missing tests
+- `/hs-sw-ux-polish [path]` — deep UI/UX scrutiny targeting Stripe-level quality
+- `hs-sw-bug-hunter` agent — strategically explore code and find/fix bugs
+- `hs-sw-peer-reviewer` agent — review work from other agents/sessions
 
 ---
 
@@ -118,20 +138,20 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### In-flow capture
 
-- `/hs-mk-capture "workflow skills are just markdown files"` — captures the insight
+- `/hs-mkt-capture "workflow skills are just markdown files"` — captures the insight
   with full context from the current conversation. Takes seconds, doesn't
   interrupt your work.
 
 ### Drafting a blog
 
-- `/hs-mk-blog-draft ~/content/captures/2026-02-28-workflow-skills.md` — draft from
+- `/hs-mkt-blog-draft ~/content/captures/2026-02-28-workflow-skills.md` — draft from
   specific captures
-- `/hs-mk-blog-draft devtools` — draft from all captures tagged "devtools"
+- `/hs-mkt-blog-draft devtools` — draft from all captures tagged "devtools"
 - Source captures move to `captures/done/` after drafting
 
 ### Maintenance
 
-- `/hs-mk-content-index` — rebuild `~/content/index.md` grouped by project and topic
+- `/hs-mkt-content-index` — rebuild `~/content/index.md` grouped by project and topic
 
 ---
 
@@ -177,17 +197,20 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 | New project, need standard setup | `/hs-sw-project-init` |
 | Have decision docs, need a plan | `/hs-sw-plan-draft` |
 | Have a plan, need to improve it | `/hs-sw-plan-review` |
-| Just wrote code, need to check it | `/hs-sw-fresh-eyes` |
 | Plan is ready, need to break it into work items | `/hs-sw-beads-create` |
 | Beads exist, need to optimize them | `/hs-sw-beads-review` |
+| Beads ready, want multi-agent execution | `/hs-sw-sprint-exec-plan` |
+| Sprint plan reviewed, ready to launch | `/hs-sw-sprint-go` |
 | Need to find untested code | `/hs-sw-test-coverage` |
 | UI feels rough | `/hs-sw-ux-polish` |
+| Just wrote code, need to check it | `/hs-sw-fresh-eyes` |
 | Want a deep bug sweep | `hs-sw-bug-hunter` agent |
 | Want to review other agents' work | `hs-sw-peer-reviewer` agent |
+| Multi-agent sprint running | `hs-sw-sprint-director` agent |
 | Ready to commit and push | `/hs-sw-land-the-plane` |
-| Found something interesting mid-session | `/hs-mk-capture` |
-| Ready to draft a blog from captures | `/hs-mk-blog-draft` |
-| Need to browse captured content | `/hs-mk-content-index` |
+| Found something interesting mid-session | `/hs-mkt-capture` |
+| Ready to draft a blog from captures | `/hs-mkt-blog-draft` |
+| Need to browse captured content | `/hs-mkt-content-index` |
 | Release done, need internal eng docs | `/hs-sw-docs-gen-int` |
 | Release done, need external user docs | `/hs-sw-docs-gen-ext` |
 | Ending a session | `/hs-cc-stash` |

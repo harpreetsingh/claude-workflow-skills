@@ -1,5 +1,5 @@
 ---
-name: hs-mk-capture
+name: hs-mkt-capture
 description: Quickly capture an interesting insight, pattern, or discovery from the current session for future blog posts or content
 argument-hint: [short-description]
 ---

@@ -9,10 +9,10 @@ All skills use the `hs-` namespace with a category prefix for discoverability:
 | Prefix | Category | Description |
 |--------|----------|-------------|
 | `hs-sw-` | Software | SDLC skills — planning, quality, shipping, docs |
-| `hs-mk-` | Marketing | Content capture, blog drafting, indexing |
+| `hs-mkt-` | Marketing | Content capture, blog drafting, indexing |
 | `hs-cc-` | Claude Code | Session management — stash and hydrate |
 
-Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-mk-` for marketing.
+Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-mkt-` for marketing.
 
 ## What's included
 
@@ -45,15 +45,17 @@ Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-m
 | `/hs-sw-ux-polish [path]` | Deep UI/UX scrutiny targeting Stripe-level quality |
 | `/hs-sw-land-the-plane [hint]` | Quality gates + logical commits + push |
 | `/hs-sw-docs-gen-int [version]` | Synthesize internal engineering docs for a release from all artifacts |
+| `/hs-sw-sprint-exec-plan` | Analyze beads into waves, label cost tiers, design team topology, generate ASCII diagram |
+| `/hs-sw-sprint-go` | Launch multi-agent sprint from execution plan — spawn director + workers |
 | `/hs-sw-docs-gen-ext [source-dir]` | Extract external-facing docs from decision docs and PRDs |
 
-#### Marketing (`hs-mk-`)
+#### Marketing (`hs-mkt-`)
 
 | Command | Purpose |
 |---------|---------|
-| `/hs-mk-capture [description]` | Quickly capture an interesting insight mid-session for future content |
-| `/hs-mk-blog-draft [files-or-topic]` | Draft a v1 blog post from captured content, move sources to done |
-| `/hs-mk-content-index` | Rebuild the content index grouped by project and topic |
+| `/hs-mkt-capture [description]` | Quickly capture an interesting insight mid-session for future content |
+| `/hs-mkt-blog-draft [files-or-topic]` | Draft a v1 blog post from captured content, move sources to done |
+| `/hs-mkt-content-index` | Rebuild the content index grouped by project and topic |
 
 #### Claude Code (`hs-cc-`)
 
@@ -68,6 +70,7 @@ Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-m
 |-------|---------|
 | `hs-sw-bug-hunter` | Strategically explore code from entry points, trace execution flows, find and fix bugs |
 | `hs-sw-peer-reviewer` | Review code from fellow agents/humans across recent commits |
+| `hs-sw-sprint-director` | Autonomous sprint director — wave management, task assignment, role switching |
 
 ## Install
 
@@ -108,8 +111,8 @@ In any Claude Code session:
 /hs-sw-test-coverage backend/        # Find test gaps
 /hs-sw-ux-polish                     # Full UX audit
 /hs-sw-land-the-plane "feat: add X"  # Quality gates + commit + push
-/hs-mk-capture "interesting insight" # Capture content mid-session
-/hs-mk-blog-draft captures/file.md  # Draft a blog from captures
+/hs-mkt-capture "interesting insight" # Capture content mid-session
+/hs-mkt-blog-draft captures/file.md  # Draft a blog from captures
 /hs-cc-stash "working on auth flow"  # Save context before compaction
 /hs-cc-hydrate                       # Restore context in new session
 ```
@@ -124,15 +127,16 @@ A typical development cycle:
 2. **Draft** — `/hs-sw-plan-draft docs/decisions/` or write `PLAN.md` from `templates/PLAN-TEMPLATE.md`
 3. **Refine** — `/hs-sw-plan-review PLAN.md` × 4-5 rounds until convergence
 4. **Decompose** — `/hs-sw-beads-create PLAN.md`, then `/hs-sw-beads-review`
-5. **Implement** — Work through beads
+4.5. **Sprint** (optional) — `/hs-sw-sprint-exec-plan` then `/hs-sw-sprint-go`
+5. **Implement** — Work through beads (or let the sprint director handle it)
 6. **Test** — `/hs-sw-test-coverage`
 7. **Polish** — `/hs-sw-ux-polish`
 8. **Verify** — `/hs-sw-fresh-eyes`
 9. **Ship** — `/hs-sw-land-the-plane`
 10. **Pause** — `/hs-cc-stash` (before compaction or ending session)
 11. **Resume** — `/hs-cc-hydrate` (in new session)
-12. **Capture** — `/hs-mk-capture "interesting insight"` (mid-session, anytime)
-13. **Blog** — `/hs-mk-blog-draft captures/file.md` (when ready to write)
+12. **Capture** — `/hs-mkt-capture "interesting insight"` (mid-session, anytime)
+13. **Blog** — `/hs-mkt-blog-draft captures/file.md` (when ready to write)
 14. **Release docs** — `/hs-sw-docs-gen-int v0.17b` (at release close)
 15. **External docs** — `/hs-sw-docs-gen-ext docs/prds/versions/v0.17/` (at release close)
 
@@ -143,6 +147,7 @@ See `playbooks/iterative-development.md` for the full workflow guide.
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
 - [beads](https://github.com/steveyegge/beads) (`bd` CLI) for task tracking skills
 - `git` for `/hs-sw-land-the-plane` and `/hs-sw-fresh-eyes`
+- Claude Code team features for `/hs-sw-sprint-go`
 
 ## License
 

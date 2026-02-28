@@ -129,6 +129,18 @@ npm run build                  # MUST pass
 
 ---
 
+## Verification Entry Points
+
+Manual testing surfaces for sprint verification. `/hs-sw-sprint-exec-plan`
+creates tickets for any missing entry points listed here.
+
+<!-- Customize for your project. Examples: -->
+<!-- - Demo page: `frontend/app/demo/page.tsx` — exercises routes and endpoints -->
+<!-- - Docs endpoint: `backend/docs/` — interactive API documentation -->
+<!-- - Health check: `GET /api/health` — smoke test for dependencies -->
+
+---
+
 ## Session Completion ("Landing the Plane")
 
 **When ending a work session**, complete ALL steps. Work is NOT done until
