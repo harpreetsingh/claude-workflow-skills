@@ -6,14 +6,16 @@ argument-hint: [file-or-directory]
 
 # /fresh-eyes — Fresh Eyes Review
 
-Carefully read over all recently written or modified code looking super carefully
-for any obvious bugs, errors, problems, issues, confusion, etc. Fix anything
-you uncover.
+Carefully read over all recently written or modified code looking for bugs,
+errors, problems, and confusion. Fix anything you uncover.
 
 ## Scope
 
 - If `$ARGUMENTS` is provided, review those specific files/directories
-- Otherwise, run `git diff --name-only HEAD~1` to find recently changed files
+- Otherwise, detect what changed in this work session:
+  1. Try `git diff --name-only $(git merge-base HEAD main)..HEAD` (all changes since branching)
+  2. Fallback to `git diff --name-only HEAD~5` if on main
+  3. Exclude test files from the initial pass (review them separately after)
 
 ## Process
 
@@ -22,11 +24,17 @@ you uncover.
 3. For each file:
    - Understand its purpose in the larger codebase
    - Trace execution flows through imports and callers
-   - Check for: logic errors, off-by-one, null/undefined handling, race
-     conditions, missing error handling at boundaries, typos in strings/keys,
-     wrong variable names, copy-paste artifacts
-4. Fix every issue found directly in the code
-5. Summarize what was found and fixed
+   - Check for:
+     - Logic errors, off-by-one, wrong comparison operators
+     - Null/undefined handling, missing return statements
+     - Type mismatches, incorrect async/await, unhandled promise rejections
+     - Race conditions, missing error handling at system boundaries
+     - Typos in strings/keys/URLs, wrong variable names
+     - Copy-paste artifacts, stale references after a refactor
+     - API contract violations (caller doesn't match callee signature)
+4. Classify each finding: **Bug** (breaks behavior) / **Defect** (will bite later) / **Nit** (minor)
+5. Fix bugs and defects directly. Report nits but don't change them.
+6. Summarize what was found and fixed
 
 ## Rules
 

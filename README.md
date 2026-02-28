@@ -14,13 +14,15 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 | `/beads-review` | Optimize existing beads for correctness and structure |
 | `/test-coverage [dir]` | Find test gaps and create beads for missing tests |
 | `/ux-polish [path]` | Deep UI/UX scrutiny targeting Stripe-level quality |
+| `/stash [focus]` | Save session context before compaction or ending a session |
+| `/hydrate` | Restore session context from the most recent stash |
 | `/land [hint]` | Quality gates + logical commits + push |
 
 ### Agents (autonomous subagents)
 
 | Agent | Purpose |
 |-------|---------|
-| `bug-hunter` | Randomly explore code, trace execution flows, find and fix bugs |
+| `bug-hunter` | Strategically explore code from entry points, trace execution flows, find and fix bugs |
 | `peer-reviewer` | Review code from fellow agents/humans across recent commits |
 
 ## Install
@@ -62,6 +64,8 @@ In any Claude Code session:
 /test-coverage backend/       # Find test gaps
 /ux-polish                    # Full UX audit
 /land "feat: add dashboard"   # Quality gates + commit + push
+/stash "working on auth flow"  # Save context before compaction
+/hydrate                       # Restore context in new session
 ```
 
 Agents are invoked automatically by Claude Code when it recognizes a matching task, or you can reference them directly.
@@ -77,6 +81,8 @@ A typical development cycle:
 5. **Polish** — `/ux-polish`
 6. **Verify** — `/fresh-eyes`
 7. **Ship** — `/land`
+8. **Pause** — `/stash` (before compaction or ending session)
+9. **Resume** — `/hydrate` (in new session)
 
 ## Requirements
 

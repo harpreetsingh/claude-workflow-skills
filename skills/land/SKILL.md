@@ -17,29 +17,39 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    git status
    git diff --stat
    ```
+   If there are no changes to commit, say so and stop.
 
-2. **Artifact check** — Reject if any of these appear in staged files:
+2. **Artifact check** — Scan for files that should never be committed:
    `*.tsbuildinfo`, `.beads/.local_version`, `.beads/daemon-error`, `*.log`,
    `.next/`, `node_modules/`, `__pycache__/`, `.env*` (except `.env.example`),
-   `.DS_Store`
+   `.DS_Store`, `*.sqlite3`
    If found: add to `.gitignore`, unstage, and warn.
 
-3. **Quality gates** (only for changed directories):
-   - Backend (`backend/`): `uv run ruff check .` → `uv run ruff format --check .` → `uv run pytest -v`
-   - Frontend (`frontend/`): `npm run lint` → `npx tsc --noEmit` → `npm run build`
+3. **Quality gates** — Detect the project's stack from the files that changed
+   and run the appropriate checks. Defer to CLAUDE.md for project-specific gate
+   commands if present. Common patterns:
+   - Python: linter (`ruff check`/`flake8`) → formatter check → tests (`pytest`)
+   - TypeScript/JS: linter (`eslint`/`biome`) → type check (`tsc --noEmit`) → build
+   - Rust: `cargo clippy` → `cargo test`
+   - Go: `go vet` → `go test ./...`
+   Only run gates for directories with actual changes.
 
-4. **Beads sync**
+4. **Beads sync** (if `.beads/` directory exists)
    ```
    bd sync --flush-only
    ```
 
 5. **Commit** — Group changes into logical commits with detailed messages.
-   If `$ARGUMENTS` provided, use it as the commit message hint.
+   If `$ARGUMENTS` provided, use it as the commit message hint. A logical group
+   is: one coherent change (e.g., "add endpoint + its tests" or "refactor X").
    Don't edit any code at this stage. Don't commit ephemeral files.
 
 6. **Push**
    ```
    git pull --rebase
+   ```
+   If rebase conflicts occur, STOP and report them — do not auto-resolve.
+   ```
    git push
    git status  # must show "up to date with origin"
    ```

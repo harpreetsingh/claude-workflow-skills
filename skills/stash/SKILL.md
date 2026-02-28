@@ -23,11 +23,17 @@ Write the file in this exact structure:
 **Where we are:**
 [1-3 sentences. Current state of the work. What phase, what's done, what's in-flight.]
 
+**Branch & git state:**
+[Current branch name, last commit SHA and message, any uncommitted changes]
+
 **Key decisions made this session:**
 [Bulleted list. Only decisions that would be lost without this file. Include the WHY, not just the WHAT.]
 
 **Key files touched or referenced:**
 [Bulleted list of file paths with 1-line descriptions of why they matter.]
+
+**Bead status:**
+[Any beads that are in_progress or were closed this session. Include IDs and titles.]
 
 **Open threads / unresolved:**
 [Bulleted list. Things we discussed but didn't finish. Disagreements. Parked ideas.]
