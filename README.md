@@ -43,7 +43,7 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 ## Install
 
 ```bash
-git clone https://github.com/hsingh/claude-workflow-skills.git
+git clone https://github.com/harpreetsingh/claude-workflow-skills.git
 cd claude-workflow-skills
 chmod +x install.sh uninstall.sh
 ./install.sh

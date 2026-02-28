@@ -192,7 +192,7 @@ This project follows the iterative development playbook:
 4. **Implement** — work through beads (`bd ready` → implement → `bd close`)
 5. **Ship** — `/land` (quality gates + commit + push)
 
-See the [iterative development playbook](https://github.com/hsingh/claude-workflow-skills/blob/main/playbooks/iterative-development.md)
+See the [iterative development playbook](https://github.com/harpreetsingh/claude-workflow-skills/blob/main/playbooks/iterative-development.md)
 for the full workflow.
 
 ---
