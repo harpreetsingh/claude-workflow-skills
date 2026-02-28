@@ -39,10 +39,15 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    bd sync --flush-only
    ```
 
-5. **Commit** — Group changes into logical commits with detailed messages.
-   If `$ARGUMENTS` provided, use it as the commit message hint. A logical group
-   is: one coherent change (e.g., "add endpoint + its tests" or "refactor X").
-   Don't edit any code at this stage. Don't commit ephemeral files.
+5. **Commit** — Create a series of logically connected commits, NOT one giant
+   commit. Analyze all changed files and group them by coherent change:
+   - Feature + its tests = one commit
+   - Refactor = one commit
+   - Config/infra changes = one commit
+   - Docs/beads = one commit
+   Each commit message should be detailed: subject line (what), body (why and
+   what's in this group). If `$ARGUMENTS` provided, use it as the overall theme.
+   Do NOT edit any code at this stage. Do NOT commit ephemeral files.
 
 6. **Push**
    ```
