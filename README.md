@@ -9,6 +9,7 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 | File | Purpose |
 |------|---------|
 | `templates/PLAN-TEMPLATE.md` | Canonical plan structure — scales from feature to architecture |
+| `templates/AGENTS-TEMPLATE.md` | Universal AGENTS.md — git safety, beads workflow, quality gates, code discipline |
 
 ### Playbooks
 
@@ -20,6 +21,7 @@ Reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills an
 
 | Command | Purpose |
 |---------|---------|
+| `/project-init [name]` | Bootstrap a new project with AGENTS.md, beads, quality gates, docs structure |
 | `/plan-draft [source-dir]` | Synthesize decision docs into a structured PLAN v1 |
 | `/plan-review [file]` | Iteratively review and improve a markdown plan |
 | `/fresh-eyes [path]` | Review recent code changes for bugs with fresh eyes |
