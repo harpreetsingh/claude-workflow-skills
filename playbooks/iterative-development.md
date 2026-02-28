@@ -7,9 +7,9 @@ shipped code using Claude Code skills and agents.
 
 ```
 Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship ──→ Docs
-   /plan-draft    /plan-review ×4-5   /beads-create   implement   /land-the-plane  /release-docs
-                  /fresh-eyes         /beads-review    /fresh-eyes                  /docs-harvest
-                                                       /capture (anytime)
+   /hs-sw-plan-draft  /hs-sw-plan-review  /hs-sw-beads-create  implement  /hs-sw-land-the-plane  /hs-sw-release-docs
+                       /hs-sw-fresh-eyes   /hs-sw-beads-review  /hs-sw-fresh-eyes                  /hs-sw-docs-harvest
+                                                                 /hs-mk-capture (anytime)
 ```
 
 ---
@@ -22,7 +22,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 ### Steps
 
 1. Gather your source docs into a directory (e.g., `docs/prds/versions/v0.XX/decisions/`)
-2. Run `/plan-draft <source-dir>` to synthesize them into a structured PLAN
+2. Run `/hs-sw-plan-draft <source-dir>` to synthesize them into a structured PLAN
 3. Review the gap report — fill in anything obvious, defer the rest to Open Questions
 
 ### Tips
@@ -41,10 +41,10 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Steps
 
-1. `/plan-review PLAN.md` — one round of deep review
+1. `/hs-sw-plan-review PLAN.md` — one round of deep review
 2. Review the suggestions. Accept, reject, or discuss.
 3. Repeat until suggestions become incremental (Claude will signal convergence)
-4. `/fresh-eyes PLAN.md` — final scan for errors, contradictions, confusion
+4. `/hs-sw-fresh-eyes PLAN.md` — final scan for errors, contradictions, confusion
 
 ### Convergence signals
 
@@ -61,9 +61,9 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Steps
 
-1. `/beads-create PLAN.md` — decompose plan into epics/tasks/subtasks
-2. `/beads-review` — optimize structure, check acceptance criteria
-3. Repeat `/beads-review` once more (diminishing returns after 2 rounds)
+1. `/hs-sw-beads-create PLAN.md` — decompose plan into epics/tasks/subtasks
+2. `/hs-sw-beads-review` — optimize structure, check acceptance criteria
+3. Repeat `/hs-sw-beads-review` once more (diminishing returns after 2 rounds)
 4. `bd ready` — verify which beads are immediately actionable
 
 ### Tips
@@ -85,16 +85,16 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 1. `bd ready` — find the next unblocked bead
 2. `bd update <id> --status in_progress` — claim it
 3. Implement
-4. `/fresh-eyes` — check your own work
+4. `/hs-sw-fresh-eyes` — check your own work
 5. `bd close <id>` — mark done
 6. Repeat
 
 ### Quality checks during implementation
 
-- `/test-coverage` — run after each major feature to identify test gaps early
-- `/ux-polish` — run after UI work, before it accumulates
-- Use the `bug-hunter` agent periodically for a deep sweep
-- Use the `peer-reviewer` agent to review work from other agents/sessions
+- `/hs-sw-test-coverage` — run after each major feature to identify test gaps early
+- `/hs-sw-ux-polish` — run after UI work, before it accumulates
+- Use the `hs-sw-bug-hunter` agent periodically for a deep sweep
+- Use the `hs-sw-peer-reviewer` agent to review work from other agents/sessions
 
 ---
 
@@ -105,7 +105,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Steps
 
-1. `/land-the-plane` — run quality gates, commit in logical groups, push
+1. `/hs-sw-land-the-plane` — run quality gates, commit in logical groups, push
 2. Verify CI passes
 3. Verify deployment succeeds
 
@@ -118,20 +118,20 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### In-flow capture
 
-- `/capture "workflow skills are just markdown files"` — captures the insight
+- `/hs-mk-capture "workflow skills are just markdown files"` — captures the insight
   with full context from the current conversation. Takes seconds, doesn't
   interrupt your work.
 
 ### Drafting a blog
 
-- `/blog-draft ~/content/captures/2026-02-28-workflow-skills.md` — draft from
+- `/hs-mk-blog-draft ~/content/captures/2026-02-28-workflow-skills.md` — draft from
   specific captures
-- `/blog-draft devtools` — draft from all captures tagged "devtools"
+- `/hs-mk-blog-draft devtools` — draft from all captures tagged "devtools"
 - Source captures move to `captures/done/` after drafting
 
 ### Maintenance
 
-- `/content-index` — rebuild `~/content/index.md` grouped by project and topic
+- `/hs-mk-content-index` — rebuild `~/content/index.md` grouped by project and topic
 
 ---
 
@@ -142,7 +142,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Internal engineering docs
 
-- `/release-docs v0.17b` — synthesizes everything into:
+- `/hs-sw-release-docs v0.17b` — synthesizes everything into:
   - `architecture.md` — how it works, key decisions with rationale
   - `api.md` — endpoints, schemas, auth
   - `data-model.md` — tables, migrations, relationships
@@ -151,7 +151,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### External user docs
 
-- `/docs-harvest docs/prds/versions/v0.17/` — extracts user-facing content into
+- `/hs-sw-docs-harvest docs/prds/versions/v0.17/` — extracts user-facing content into
   `docs/site/` (concepts, guides, architecture, reference)
 
 ---
@@ -160,12 +160,12 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Pausing work
 
-- `/stash "context about what matters"` — before compaction or ending session
+- `/hs-cc-stash "context about what matters"` — before compaction or ending session
 - This captures: where you are, key decisions, open threads, next step
 
 ### Resuming work
 
-- `/hydrate` — at the start of a new session
+- `/hs-cc-hydrate` — at the start of a new session
 - This restores context and shows git state since you left
 
 ---
@@ -174,20 +174,21 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 | Situation | Skill |
 |-----------|-------|
-| Have decision docs, need a plan | `/plan-draft` |
-| Have a plan, need to improve it | `/plan-review` |
-| Just wrote code, need to check it | `/fresh-eyes` |
-| Plan is ready, need to break it into work items | `/beads-create` |
-| Beads exist, need to optimize them | `/beads-review` |
-| Need to find untested code | `/test-coverage` |
-| UI feels rough | `/ux-polish` |
-| Want a deep bug sweep | `bug-hunter` agent |
-| Want to review other agents' work | `peer-reviewer` agent |
-| Ready to commit and push | `/land-the-plane` |
-| Found something interesting mid-session | `/capture` |
-| Ready to draft a blog from captures | `/blog-draft` |
-| Need to browse captured content | `/content-index` |
-| Release done, need internal eng docs | `/release-docs` |
-| Release done, need external user docs | `/docs-harvest` |
-| Ending a session | `/stash` |
-| Starting a session | `/hydrate` |
+| New project, need standard setup | `/hs-sw-project-init` |
+| Have decision docs, need a plan | `/hs-sw-plan-draft` |
+| Have a plan, need to improve it | `/hs-sw-plan-review` |
+| Just wrote code, need to check it | `/hs-sw-fresh-eyes` |
+| Plan is ready, need to break it into work items | `/hs-sw-beads-create` |
+| Beads exist, need to optimize them | `/hs-sw-beads-review` |
+| Need to find untested code | `/hs-sw-test-coverage` |
+| UI feels rough | `/hs-sw-ux-polish` |
+| Want a deep bug sweep | `hs-sw-bug-hunter` agent |
+| Want to review other agents' work | `hs-sw-peer-reviewer` agent |
+| Ready to commit and push | `/hs-sw-land-the-plane` |
+| Found something interesting mid-session | `/hs-mk-capture` |
+| Ready to draft a blog from captures | `/hs-mk-blog-draft` |
+| Need to browse captured content | `/hs-mk-content-index` |
+| Release done, need internal eng docs | `/hs-sw-release-docs` |
+| Release done, need external user docs | `/hs-sw-docs-harvest` |
+| Ending a session | `/hs-cc-stash` |
+| Starting a session | `/hs-cc-hydrate` |

@@ -187,10 +187,10 @@ Format: `docs/decisions/YYYY-MM-DD-short-name.md`
 This project follows the iterative development playbook:
 
 1. **Plan** — `PLAN.md` using the canonical template (Goals/Non-Goals/Context/Deliverables)
-2. **Review** — `/plan-review PLAN.md` × 4-5 rounds until convergence
-3. **Decompose** — `/beads-create PLAN.md` then `/beads-review`
+2. **Review** — `/hs-sw-plan-review PLAN.md` × 4-5 rounds until convergence
+3. **Decompose** — `/hs-sw-beads-create PLAN.md` then `/hs-sw-beads-review`
 4. **Implement** — work through beads (`bd ready` → implement → `bd close`)
-5. **Ship** — `/land` (quality gates + commit + push)
+5. **Ship** — `/hs-sw-land-the-plane` (quality gates + commit + push)
 
 See the [iterative development playbook](https://github.com/harpreetsingh/claude-workflow-skills/blob/main/playbooks/iterative-development.md)
 for the full workflow.
