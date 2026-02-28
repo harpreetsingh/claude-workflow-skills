@@ -44,8 +44,8 @@ Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-m
 | `/hs-sw-test-coverage [dir]` | Find test gaps and create beads for missing tests |
 | `/hs-sw-ux-polish [path]` | Deep UI/UX scrutiny targeting Stripe-level quality |
 | `/hs-sw-land-the-plane [hint]` | Quality gates + logical commits + push |
-| `/hs-sw-release-docs [version]` | Synthesize internal engineering docs for a release from all artifacts |
-| `/hs-sw-docs-harvest [source-dir]` | Extract external-facing docs from decision docs and PRDs |
+| `/hs-sw-docs-gen-int [version]` | Synthesize internal engineering docs for a release from all artifacts |
+| `/hs-sw-docs-gen-ext [source-dir]` | Extract external-facing docs from decision docs and PRDs |
 
 #### Marketing (`hs-mk-`)
 
@@ -133,8 +133,8 @@ A typical development cycle:
 11. **Resume** — `/hs-cc-hydrate` (in new session)
 12. **Capture** — `/hs-mk-capture "interesting insight"` (mid-session, anytime)
 13. **Blog** — `/hs-mk-blog-draft captures/file.md` (when ready to write)
-14. **Release docs** — `/hs-sw-release-docs v0.17b` (at release close)
-15. **External docs** — `/hs-sw-docs-harvest docs/prds/versions/v0.17/` (at release close)
+14. **Release docs** — `/hs-sw-docs-gen-int v0.17b` (at release close)
+15. **External docs** — `/hs-sw-docs-gen-ext docs/prds/versions/v0.17/` (at release close)
 
 See `playbooks/iterative-development.md` for the full workflow guide.
 

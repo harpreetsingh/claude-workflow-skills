@@ -7,8 +7,8 @@ shipped code using Claude Code skills and agents.
 
 ```
 Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code ──→ Ship ──→ Docs
-   /hs-sw-plan-draft  /hs-sw-plan-review  /hs-sw-beads-create  implement  /hs-sw-land-the-plane  /hs-sw-release-docs
-                       /hs-sw-fresh-eyes   /hs-sw-beads-review  /hs-sw-fresh-eyes                  /hs-sw-docs-harvest
+   /hs-sw-plan-draft  /hs-sw-plan-review  /hs-sw-beads-create  implement  /hs-sw-land-the-plane  /hs-sw-docs-gen-int
+                       /hs-sw-fresh-eyes   /hs-sw-beads-review  /hs-sw-fresh-eyes                  /hs-sw-docs-gen-ext
                                                                  /hs-mk-capture (anytime)
 ```
 
@@ -142,7 +142,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### Internal engineering docs
 
-- `/hs-sw-release-docs v0.17b` — synthesizes everything into:
+- `/hs-sw-docs-gen-int v0.17b` — synthesizes everything into:
   - `architecture.md` — how it works, key decisions with rationale
   - `api.md` — endpoints, schemas, auth
   - `data-model.md` — tables, migrations, relationships
@@ -151,7 +151,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 
 ### External user docs
 
-- `/hs-sw-docs-harvest docs/prds/versions/v0.17/` — extracts user-facing content into
+- `/hs-sw-docs-gen-ext docs/prds/versions/v0.17/` — extracts user-facing content into
   `docs/site/` (concepts, guides, architecture, reference)
 
 ---
@@ -188,7 +188,7 @@ Decision Docs ──→ PLAN v1 ──→ PLAN vN ──→ Beads ──→ Code
 | Found something interesting mid-session | `/hs-mk-capture` |
 | Ready to draft a blog from captures | `/hs-mk-blog-draft` |
 | Need to browse captured content | `/hs-mk-content-index` |
-| Release done, need internal eng docs | `/hs-sw-release-docs` |
-| Release done, need external user docs | `/hs-sw-docs-harvest` |
+| Release done, need internal eng docs | `/hs-sw-docs-gen-int` |
+| Release done, need external user docs | `/hs-sw-docs-gen-ext` |
 | Ending a session | `/hs-cc-stash` |
 | Starting a session | `/hs-cc-hydrate` |

@@ -1,5 +1,5 @@
 ---
-name: hs-sw-release-docs
+name: hs-sw-docs-gen-int
 description: Synthesize PLANs, PRDs, decisions, and closed tickets into comprehensive internal engineering docs for a release
 argument-hint: [version-or-source-dir]
 ---

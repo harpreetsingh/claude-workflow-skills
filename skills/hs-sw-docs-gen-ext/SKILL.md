@@ -1,5 +1,5 @@
 ---
-name: hs-sw-docs-harvest
+name: hs-sw-docs-gen-ext
 description: Extract external-facing documentation from decision docs, PRDs, and implementation into docs/site/
 argument-hint: [source-dir]
 ---
