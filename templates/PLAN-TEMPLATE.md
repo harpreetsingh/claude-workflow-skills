@@ -73,12 +73,38 @@ cover it.]
 
 ### High-Level Design
 
-[How the system works end-to-end. Include a diagram (ASCII is fine) showing the
-major components and data flow. This section should let someone understand the
-architecture in 2 minutes.]
+[How the system works end-to-end. **A diagram is required — not optional.**
+ASCII is fine. This section should let someone understand the architecture in
+2 minutes. If you can't draw it, you don't understand it well enough yet.]
 
 ```
-[ASCII diagram of components and data flow]
+[REQUIRED: ASCII diagram of components and data flow]
+
+Example:
+User → Frontend → API → Service → Database
+                    ↓
+                 External API
+```
+
+[Add more diagrams as needed. One diagram per flow/concern is clearer than
+trying to show everything in one. Common additions:]
+
+**User Flow** *(required if there's a user-facing interaction)*
+```
+[Step 1] → [Step 2] → [Step 3]
+               ↓
+          [Error path]
+```
+
+**Sequence Diagram** *(required if there are async operations or multi-actor flows)*
+```
+User        Frontend      Backend       DB
+ |              |             |          |
+ |--action---→  |             |          |
+ |              |--request--→ |          |
+ |              |             |--query-→ |
+ |              |             |←-result- |
+ |←--response-- |←-response-- |          |
 ```
 
 ### Key Decisions

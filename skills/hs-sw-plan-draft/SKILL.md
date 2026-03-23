@@ -53,6 +53,37 @@ The template scales by scope. Not every section needs equal depth:
 
 Collapse sections that aren't relevant — don't fill them with filler.
 
+## Diagrams Are Required
+
+**A PLAN without at least one diagram is incomplete.** Do not consider the plan
+done until the diagram requirement is satisfied.
+
+Every plan needs a minimum of one ASCII diagram. Complex features need more.
+Use ASCII — no external tools, no image links. Diagrams live inline in the plan.
+
+| Feature complexity | Required diagrams |
+|--------------------|-------------------|
+| Simple (1 component, linear flow) | 1 — architecture/data flow |
+| Medium (2-3 components, branching) | 2 — architecture + user flow or sequence |
+| Complex (multi-component, async, multi-actor) | 3+ — architecture, user flow, sequence, data model |
+
+**Required diagram types by what the feature does:**
+
+- **Any feature with a user-facing flow** → user flow diagram (what the user sees/does step by step)
+- **Any feature with an API or data layer** → architecture diagram (components + data flow)
+- **Any feature with async operations or multi-step sequences** → sequence diagram (who calls who, in order)
+- **Any feature that modifies data models** → data model diagram (tables, fields, relationships)
+
+**Format:**
+```
+Component A → Component B
+     ↓               ↓
+  Output A        Output B
+```
+
+If you find yourself writing a paragraph that describes a flow, stop and draw it instead.
+Paragraphs describing flows are a red flag — they hide complexity and are hard to review.
+
 ## Rules
 
 - The plan must be self-contained. An agent reading only the plan should be able
@@ -61,3 +92,4 @@ Collapse sections that aren't relevant — don't fill them with filler.
   in decision docs. Don't summarize away the WHY.
 - Write in the same voice as the source docs. Don't sanitize personality.
 - Use extended thinking for synthesis.
+- **No diagrams = incomplete plan.** Do not write "diagram TBD" — draw it now.
