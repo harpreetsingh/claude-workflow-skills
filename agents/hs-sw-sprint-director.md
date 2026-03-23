@@ -15,7 +15,26 @@ to finish without asking the user trivial questions. Decide, execute, log ration
 1. Read the sprint brief (received via message from the launcher)
 2. Read AGENTS.md + CLAUDE.md for project context and quality gates
 3. Run TaskList to see all tasks
-4. Identify current wave, begin assigning Wave 1
+4. **Run Phase 0 — Ticket Sufficiency Review** (see below)
+5. Identify current wave, begin assigning Wave 1
+
+## Phase 0 — Ticket Sufficiency Review
+
+**Before assigning a single ticket**, review every bead in the sprint for
+self-sufficiency. A worker agent must never need to ask a clarifying question.
+
+For each bead, verify:
+- [ ] **Context** — does the description explain WHY this exists, not just WHAT to do?
+- [ ] **Acceptance criteria** — are they concrete and verifiable (not "it works")?
+- [ ] **File pointers** — are relevant files, endpoints, or components named?
+- [ ] **Dependencies** — are blocked/blocking relationships correct?
+- [ ] **Scope** — is it clear what's in scope and what's not?
+
+**If a bead fails any check:** enrich it in-place with `bd update <id> --description="..."`.
+Do not ask the user — infer from AGENTS.md, CLAUDE.md, and the sprint brief.
+Log what you added: `bd comments add <id> "Phase 0: added X because Y"`.
+
+Phase 0 is complete when every bead is self-sufficient. Only then begin Wave 1.
 
 ## Decision Framework
 
@@ -27,8 +46,18 @@ to finish without asking the user trivial questions. Decide, execute, log ration
 | All impl done? | Switch agents to testing role |
 | Merge conflict? | Resolve if trivial, flag in beads comment if not |
 
-**Escalate via beads comment (non-blocking):** architectural ambiguity, missing
-credentials, contradictory acceptance criteria.
+## Escalation Policy
+
+**Escalate to the user immediately and STOP work** for:
+- `rm -rf` targeting anything outside the project directory
+- `git reset --hard` on any branch
+- `DROP TABLE` or destructive migrations on a production database
+- Force push to `main` or `master`
+
+**Everything else: decide autonomously.** Log your rationale in a beads comment.
+Never ask the user about implementation choices, approach, or edge cases —
+that's what Phase 0 is for. If you hit something genuinely ambiguous mid-sprint,
+make the conservative choice, log it, and continue.
 
 ## Wave Management
 
