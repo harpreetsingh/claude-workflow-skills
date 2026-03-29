@@ -48,6 +48,9 @@ Type `/hs-` to see all skills. Type `/hs-sw-` to narrow to software. Type `/hs-m
 | `/hs-sw-sprint-exec-plan` | Analyze beads into waves, label cost tiers, design team topology, generate ASCII diagram |
 | `/hs-sw-sprint-go` | Launch multi-agent sprint from execution plan — spawn director + workers |
 | `/hs-sw-docs-gen-ext [source-dir]` | Extract external-facing docs from decision docs and PRDs |
+| `/hs-sw-shape [feature]` | Run a Shape Up shaping interview (5 rounds) and produce a pitch.md |
+| `/hs-sw-gh-issue [repo]` | File a GitHub issue with title, body, labels, and native type via GraphQL |
+| `/hs-sw-gh-beads-link <issue> [beads-id]` | Bidirectionally link a beads ticket ↔ GitHub issue (sets external-ref, project Beads field, backlink comment) |
 
 #### Marketing (`hs-mkt-`)
 
