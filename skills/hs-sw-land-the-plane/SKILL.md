@@ -20,7 +20,7 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    If there are no changes to commit, say so and stop.
 
 2. **Artifact check** — Scan for files that should never be committed:
-   `*.tsbuildinfo`, `.beads/.local_version`, `.beads/daemon-error`, `*.log`,
+   `*.tsbuildinfo`, `.beads/.local_version`, `*.log`,
    `.next/`, `node_modules/`, `__pycache__/`, `.env*` (except `.env.example`),
    `.DS_Store`, `*.sqlite3`
    If found: add to `.gitignore`, unstage, and warn.
@@ -36,7 +36,7 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
 
 4. **Beads sync** (if `.beads/` directory exists)
    ```
-   bd sync --flush-only
+   bd dolt push
    ```
 
 5. **Commit** — Create a series of logically connected commits, NOT one giant
