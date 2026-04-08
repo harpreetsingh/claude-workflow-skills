@@ -34,10 +34,9 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    - Go: `go vet` → `go test ./...`
    Only run gates for directories with actual changes.
 
-4. **Beads sync** (if `.beads/` directory exists)
-   ```
-   bd dolt push
-   ```
+4. **Beads sync** (if `.beads/` directory exists and NOT using Railway/server mode)
+   - **Embedded mode** (local Dolt + DoltHub remote): `bd dolt push`
+   - **Server mode** (Railway or central dolt sql-server): skip — writes land live, no push needed
 
 5. **Commit** — Create a series of logically connected commits, NOT one giant
    commit. Analyze all changed files and group them by coherent change:
