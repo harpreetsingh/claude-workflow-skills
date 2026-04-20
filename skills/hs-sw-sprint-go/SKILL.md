@@ -1,12 +1,16 @@
 ---
 name: hs-sw-sprint-go
-description: Launch multi-agent sprint from execution plan — spawn director + workers
+description: Launch multi-agent sprint from execution plan — spawn director who owns the team
 ---
 
 # /sprint-go — Launch Sprint
 
 Reads the persisted sprint plan from `/hs-sw-sprint-exec-plan` and launches
 a multi-agent sprint. This is the walk-away moment.
+
+**Key architecture:** Director creates the team and spawns workers — making Director
+the system-level team-lead who receives all worker messages directly. The user's
+session exits the loop after spawning Director.
 
 ## Process
 
@@ -22,34 +26,28 @@ a multi-agent sprint. This is the walk-away moment.
 - **Wait for explicit "go" from user**
 - Options: go / cancel
 
-### Step 3 — Create Team
+### Step 3 — Spawn Director
 
-- `TeamCreate("sprint-<date>-<project>")`
+- `Agent(subagent_type="hs-sw-sprint-director", name="director", run_in_background=true)`
+- Pass the FULL sprint brief as the prompt, including:
+  - Complete `tmp/sprint-exec-plan.md` content
+  - Team topology (worker names, types, model tiers, ticket assignments)
+  - Team name to create: `sprint-<date>-<project>`
+  - Quality gates and project context from AGENTS.md/CLAUDE.md
+- Director will create the team, spawn workers, and manage autonomously
 
-### Step 4 — Mirror Beads into Tasks
+### Step 4 — Exit
 
-- `TaskCreate()` for each ticket (include `bd` ticket ID in description)
-- `TaskUpdate(addBlockedBy=[...])` mirroring beads dependency graph
-
-### Step 5 — Spawn Director
-
-- `Task(subagent_type="hs-sw-sprint-director", name="director", team_name=...)`
-- Send sprint brief via `SendMessage`
-
-### Step 6 — Spawn Workers
-
-- `Task(subagent_type="general-purpose", name="worker-N", team_name=...)` for each worker in topology
-- Cap at 5 concurrent workers
-
-### Step 7 — Report
-
-- Team name, agent count, assignment summary
-- "You can walk away. Director manages from here. Return to check verification entry points."
+- Report to user: "Director launched in background. It will create the team and spawn N workers."
+- "You can walk away. Director manages everything. Return to check verification entry points."
+- **Do NOT create a team. Do NOT spawn workers. Do NOT stay in the loop.**
 
 ## Rules
 
 - Never proceed without explicit user approval
-- Cap at 5 concurrent workers
-- Director gets the full sprint brief via message
+- Director creates the team (NOT the launcher) — this is critical for message routing
+- Director gets the full sprint brief + team topology in its spawn prompt
+- Cap at 5 concurrent workers (enforced by Director)
 - Workers are general-purpose (full tool access)
+- Launcher exits immediately after spawning Director
 - Requires Claude Code team features
