@@ -1,17 +1,25 @@
 ---
 name: hs-sw-shape
 description: Run a Shape Up shaping interview (5 rounds) and produce a pitch.md for a feature
-argument-hint: [feature-name-or-jira-id]
+argument-hint: [feature-name-or-gh-issue]
 ---
 
 # /hs-sw-shape — Shape Up Shaping Interview
+
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ ★SHAPE → PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE  │
+│ ★ YOU ARE HERE: Entry point. Shape the problem before building.         │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 Run a 5-round shaping interview for a feature and write the output to
 `docs/features/<slug>/pitch.md` in the current project.
 
 **Usage:**
 ```
-/hs-sw-shape JIRA-42
+/hs-sw-shape #42
 /hs-sw-shape "skill search redesign"
 /hs-sw-shape   ← prompts for feature name
 ```
@@ -37,7 +45,7 @@ clarifying questions, but not so detailed it constrains every decision.
 If `$ARGUMENTS` is empty, ask: "What feature are we shaping?"
 
 Derive a slug from the feature name/ID (lowercase, hyphens, no spaces).
-Example: "JIRA-42: Skill Search Redesign" → `skill-search-redesign`
+Example: "#42: Skill Search Redesign" → `skill-search-redesign`
 
 Check if `docs/features/<slug>/pitch.md` already exists. If so, ask: "A pitch
 already exists at that path. Continue from it, or start fresh?"
@@ -88,6 +96,9 @@ Ask:
 - What does the happy path look like in 3-5 user steps?
 - What's the ONE thing that makes this solution valuable — the core interaction?
 - What does the user see/do differently after this ships vs before?
+- **CLI surface:** What CLI commands should expose this feature? (Every feature
+  needs a CLI interface, not just a UI. Think: what would an agent or power user
+  run from the terminal? All commands must support `--json` for machine consumption.)
 
 After they answer: synthesize a rough solution sketch in your response. Use an ASCII
 diagram if it helps clarify the flow. Ask: "Does this capture the direction, or am I
@@ -139,7 +150,7 @@ more input at this stage — synthesize from the conversation.
 ```markdown
 # Pitch: [Feature Name]
 
-**Jira:** [ID from arguments, or "—" if not provided]
+**GitHub Issue:** [#number from arguments, or "—" if not provided]
 **Shaped by:** [ask user if not obvious from context]
 **Date:** [today's date]
 **Appetite:** [X days / X weeks — as a constraint]
@@ -196,12 +207,22 @@ User clicks skill → added to agent
 
 ## After Writing
 
+Create `docs/features/<slug>/planning-context/` if it doesn't exist.
+
+If the user shared any research, screenshots, competitor analysis, PRD drafts,
+or reference material during the shaping interview, save them into
+`planning-context/`. If the user referenced external links or docs, note them
+in a `planning-context/sources.md` file.
+
 Tell the user the pitch was written at `docs/features/<slug>/pitch.md`, then say:
 
 > "Next steps:
-> 1. Link this pitch in your Jira ticket description
-> 2. Add the `ready-to-bet` label in Jira
-> 3. When the team co-opts it, run `/hs-sw-plan-draft docs/features/<slug>/` to produce PLAN.md"
+> 1. Drop any research, screenshots, or competitor analysis into
+>    `docs/features/<slug>/planning-context/` — this is the evidence bag for
+>    planning decisions
+> 2. Link this pitch in the GitHub issue description
+> 3. Add the `ready-to-bet` label on the GitHub issue
+> 4. When the team co-opts it, run `/hs-sw-plan-draft docs/features/<slug>/` to produce PLAN.md"
 
 ---
 
@@ -214,6 +235,7 @@ A good pitch passes this checklist. Verify before writing:
 - [ ] Solution has a happy path and at least one ASCII diagram (if flow is non-trivial)
 - [ ] Every rabbit hole has an explicit decision (in/out/defer)
 - [ ] No-Gos are explicit, not implied
+- [ ] CLI commands are specified (what the user/agent runs from terminal, with `--json`)
 - [ ] A senior engineer could start building without asking clarifying questions
 
 If any item fails, go back and ask a focused follow-up question before writing.

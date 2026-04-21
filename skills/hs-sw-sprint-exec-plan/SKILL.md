@@ -5,6 +5,14 @@ description: Analyze beads into waves, label cost tiers, design team topology, g
 
 # /sprint-exec-plan — Sprint Execution Plan
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → DECOMPOSE → ★SPRINT PLAN → EXECUTE → CLOSE  │
+│ ★ YOU ARE HERE: Analyze beads into waves + team. Last step before go.   │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Read-only analysis of your beads backlog. Produces a sprint brief with wave plan,
 cost tiers, team topology, and ASCII deployment diagram. No team creation — this
 is the thinking step before `/hs-sw-sprint-go`.
@@ -26,31 +34,64 @@ is the thinking step before `/hs-sw-sprint-go`.
 - Place in final wave
 - If no section: note and suggest adding one
 
-### Step 3 — Wave Analysis
+### Step 3 — TDD Pairing Check
 
-- Build DAG from beads dependencies
+Before wave analysis, verify TDD structure:
+
+- For each impl bead with testable acceptance criteria: does a companion test bead exist?
+- Does the test bead block the impl bead?
+- If missing: create the test bead with `bd create` and wire dependencies
+- Test beads should be in the same wave or one wave before their impl bead
+- Log any test beads created: `bd comments add <id> "Sprint plan: created TDD pair"`
+
+### Step 4 — Wave Analysis
+
+- Build DAG from beads dependencies (including TDD pairs)
 - Group into waves: Wave 1 = no deps, Wave N = deps all in 1..N-1
 - Name waves by dominant work type (Foundation / Core / Integration / Polish)
+- Verify test beads appear in same or earlier wave than their impl beads
 - Flag cycles — must resolve before proceeding
 
-### Step 4 — Model Tier Labeling
+### Step 5 — Model Tier Labeling
 
-Apply tiers via `bd update <id> --labels tier:<tier>`:
+Apply tiers via `bd update <id> --add-label tier:<tier>`:
 
-- `opus`: architectural decisions, complex multi-file refactors, high fan-out (blocks 3+)
-- `sonnet`: standard features, API endpoints, UI components
-- `haiku`: config, boilerplate, test stubs, docs, mechanical tasks
+- `opus`: architectural decisions, complex multi-file refactors, high fan-out (blocks 3+), protocol design, anything moderately complex or above
+- `sonnet`: standard features, API endpoints, UI components, config, boilerplate, test stubs, docs, mechanical tasks
+
+Do NOT use `haiku` tier. All sprint work uses either opus or sonnet.
 
 Respect existing ticket labels — don't overwrite user-assigned ones.
 
-### Step 5 — Team Topology
+### Step 6 — Domain Balance Check
+
+Count beads by domain (backend, frontend, infra, tests). Flag imbalances:
+
+- **BLOCK** if any domain has impl beads but no worker assigned to it
+- **WARN** if >30% of beads are frontend but no frontend-specialized worker
+- **WARN** if frontend and backend beads exist in the same wave but only one
+  domain has a worker
+- **WARN** if a domain has impl beads but zero test beads
+
+Present domain distribution to user:
+```
+Backend: 15 impl + 8 test = 23 beads
+Frontend: 10 impl + 5 test = 15 beads
+Infra: 3 impl + 0 test = 3 beads  ⚠️ no test coverage
+```
+
+### Step 7 — Team Topology
 
 - Agent count: total tickets / 4, capped at 5 workers
 - Logical groupings: analyze domains (backend/frontend/infra or by label)
+- **Every domain with beads MUST have at least one worker** — this is the rule
+  that prevents "backend done, frontend skipped"
 - Manager layer: only if 4+ workers; otherwise Director manages directly
 - Director: always one, always opus-tier
+- QA agent: always one, always present (does not count toward worker cap)
+- TDD consideration: plan for test-writer / implementer separation on opus tickets
 
-### Step 6 — Generate Sprint Brief
+### Step 8 — Generate Sprint Brief
 
 Two artifacts:
 
@@ -58,18 +99,17 @@ Two artifacts:
 ```
 Wave 1 (Foundation)     Wave 2 (Core)        Wave 3 (Polish)
 ┌─────────────────┐    ┌────────────────┐    ┌────────────────┐
-│ T-01 schema  ◆  │    │ T-04 API    ●  │    │ T-07 tests  ○  │
-│ T-02 models  ◆  │───▶│ T-05 UI     ●  │───▶│ T-08 docs   ○  │
-│ T-03 config  ○  │    │ T-06 hooks  ●  │    │ T-09 demo   ○  │
+│ T-01 schema  ◆  │    │ T-04 API    ●  │    │ T-07 tests  ●  │
+│ T-02 models  ◆  │───▶│ T-05 UI     ●  │───▶│ T-08 docs   ●  │
+│ T-03 config  ●  │    │ T-06 hooks  ●  │    │ T-09 demo   ●  │
 └─────────────────┘    └────────────────┘    └────────────────┘
-◆ = opus  ● = sonnet  ○ = haiku
+◆ = opus  ● = sonnet
 
-Director (Opus)
-├── Backend Manager (Sonnet)
-│   ├── Worker-1: T-01, T-02, T-04
-│   └── Worker-2: T-03, T-05
-└── Frontend Manager (Sonnet)
-    └── Worker-3: T-06, T-07, T-08, T-09
+Director (Opus) — coordinator only, never implements
+├── QA Agent — independent verification, never implements
+├── Backend Worker-1: T-01 (test), T-04 (impl)
+├── Backend Worker-2: T-02 (test), T-05 (impl)
+└── Frontend Worker-3: T-06 (test), T-07 (impl), T-08, T-09
 ```
 
 **B. Director Brief** — self-contained markdown with:
@@ -79,9 +119,14 @@ Director (Opus)
 - Role switching rules (impl → test → docs → marketing → fresh-eyes)
 - Autonomy mandate
 
-### Step 7 — Persist + Present
+### Step 9 — Persist + Present
 
-- Write full plan to `tmp/sprint-exec-plan.md`
+- Determine the feature directory. Look at the beads epic or ask the user:
+  "What feature directory should I use? (e.g., `docs/features/org-management/`)"
+- Write full plan to `tmp/sprint-exec-plan.md` (for sprint-go to read)
+- **Also write to `<feature_dir>/sprint-plan.md`** — this is the persistent copy
+  that lives alongside PLAN.md and pitch.md. Include the `feature_dir` path in
+  the plan so the Director knows where to write checkpoints.
 - Present ASCII diagram + topology + cost summary in conversation
 - Tell user: "Review and adjust, or run `/hs-sw-sprint-go` to launch"
 

@@ -6,6 +6,14 @@ argument-hint: [plan-file-path]
 
 # /beads-create — Plan to Beads
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → ★DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE  │
+│ ★ YOU ARE HERE: Break PLAN into executable beads with TDD pairs.        │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Read the plan at `$ARGUMENTS` (default: `PLAN.md`) and create a comprehensive,
 granular set of beads with full dependency structure.
 
@@ -21,16 +29,83 @@ granular set of beads with full dependency structure.
      - Which plan section this implements and why
      - Background and reasoning/justification
      - Acceptance criteria (concrete, verifiable conditions)
+     - CLI commands this bead must deliver (if applicable) — command name,
+       flags, `--json` output format. A bead that delivers an API endpoint
+       or UI feature MUST also specify its CLI counterpart.
      - Relevant considerations and gotchas
      - How it serves the overarching project goals
    - Appropriate type (epic/feature/task/bug) and priority (0-4)
    - Record the returned bead ID for dependency wiring
-4. **Phase 2 — Wire dependencies** (must be sequential, after all IDs exist):
-   Overlay dependency structure with `bd dep add`
-5. **Phase 3 — Verify**:
+4. **Phase 1b — Create TDD test beads** (see TDD section below):
+   For each implementation bead with testable acceptance criteria, create a
+   companion test bead.
+5. **Phase 2 — Wire dependencies** (must be sequential, after all IDs exist):
+   Overlay dependency structure with `bd dep add`.
+   Wire TDD pairs: test bead BLOCKS impl bead (`bd dep add <impl-id> <test-id>`).
+6. **Phase 3 — Verify**:
    - `bd graph --all` to check the structure visually
    - `bd ready` to confirm which beads are immediately actionable
    - Flag anything that looks wrong (orphaned beads, everything blocked, etc.)
+   - Verify every impl bead with testable criteria has a companion test bead
+
+## TDD: Test-First Beads
+
+Every implementation bead with testable acceptance criteria MUST have a companion
+test bead. This enforces red-green-refactor at the planning level — tests are
+written and verified FAILING before implementation begins.
+
+### When to create a test bead
+
+Create a companion test bead when the impl bead:
+- Has an API endpoint (test request/response contracts)
+- Has business logic (test inputs/outputs/edge cases)
+- Has a UI component (test route exists, component renders, build passes)
+- Has a data model (test schema, constraints, RLS policies)
+
+Do NOT create test beads for:
+- Config/boilerplate (no logic to test)
+- Documentation tasks
+- Epic-level tracking beads
+
+### Test bead format
+
+```
+Title: "Write tests for <feature> (red)"
+Description:
+  - What to test (derived from impl bead's acceptance criteria)
+  - Expected test file paths
+  - Key assertions that must exist
+  - "Tests MUST FAIL when written — there is no implementation yet"
+Acceptance criteria:
+  - [ ] Test file(s) created at expected path(s)
+  - [ ] Tests run and FAIL (red phase) — not import errors, real assertion failures
+  - [ ] N+ assertions covering the impl bead's acceptance criteria
+  - [ ] No implementation code written (test-only changes)
+Type: task
+```
+
+### Dependency wiring for TDD
+
+```
+bd dep add <impl-bead-id> <test-bead-id>
+```
+
+The test bead BLOCKS the impl bead. Implementation cannot start until tests
+exist and are verified failing. This is structural enforcement — not honor-system.
+
+### Wave placement
+
+Test beads go in the same wave as or one wave before their impl bead. The
+dependency graph naturally prevents impl from starting before tests exist.
+
+## Domain Coverage Check
+
+After all beads are created, verify domain balance:
+
+- Count beads by domain: backend, frontend, infrastructure, tests
+- If any domain has >30% of total beads, flag it
+- If frontend and backend beads exist but test beads only cover one domain, flag it
+- If a domain has impl beads but zero test beads, STOP and create them
 
 ## Rules
 
@@ -39,4 +114,6 @@ granular set of beads with full dependency structure.
 - Include the WHY, not just the WHAT.
 - Dependencies must be correct — nothing should be unblocked that has real prereqs,
   and nothing should be blocked unnecessarily.
+- Every impl bead with testable criteria must have a companion test bead.
+- Test beads must block their corresponding impl beads.
 - Use extended thinking for decomposition.

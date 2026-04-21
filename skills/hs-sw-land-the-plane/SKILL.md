@@ -7,6 +7,14 @@ disable-model-invocation: true
 
 # /land — Land the Plane
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → ★CLOSE  │
+│ ★ YOU ARE HERE: Final step. Quality gates → commit → push.              │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Run the full pre-push checklist, commit, and push. Work is NOT done until
 `git push` succeeds.
 
@@ -34,9 +42,16 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    - Go: `go vet` → `go test ./...`
    Only run gates for directories with actual changes.
 
-4. **Beads sync** (if `.beads/` directory exists and NOT using Railway/server mode)
-   - **Embedded mode** (local Dolt + DoltHub remote): `bd dolt push`
-   - **Server mode** (Railway or central dolt sql-server): skip — writes land live, no push needed
+4. **Beads preflight** (if `.beads/` directory exists)
+   ```
+   bd preflight --check
+   ```
+   This runs automated checks: tests run locally, lint errors, formatting,
+   version mismatches. If preflight fails, report the issues. Fix what you
+   can (lint/format auto-fix), warn on the rest.
+
+   Note: beads state lives on Railway Dolt (remote). Every `bd` write lands
+   immediately — no local export or sync step needed.
 
 5. **Commit** — Create a series of logically connected commits, NOT one giant
    commit. Analyze all changed files and group them by coherent change:
@@ -48,19 +63,44 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    what's in this group). If `$ARGUMENTS` provided, use it as the overall theme.
    Do NOT edit any code at this stage. Do NOT commit ephemeral files.
 
-6. **Push**
+6. **Push + PR**
+
+   First, check the current branch:
    ```
-   git pull --rebase
+   git branch --show-current
+   ```
+
+   **If on a protected branch** (`main`, `production`):
+   STOP. Do NOT push directly. Tell the user:
+   "You're on `<branch>` which is protected. Create a feature branch first:
+   `git checkout -b feature/<name>`, then re-run `/land`."
+
+   **If on a feature/fix branch:**
+   ```
+   git pull --rebase origin <branch>
    ```
    If rebase conflicts occur, STOP and report them — do not auto-resolve.
    ```
-   git push
-   git status  # must show "up to date with origin"
+   git push -u origin <branch>
    ```
+   Then create or find the PR:
+   ```
+   # Check for existing PR first
+   gh pr view --json url 2>/dev/null || gh pr create --base main --title "<summary>" --body "<description>"
+   ```
+   Report the PR URL to the user.
+
+   **If `gh` is not available or PR creation fails:** push succeeds, tell the
+   user to create the PR manually. The push is the critical path, PR is best-effort.
+
+   **Branch strategy:** `feature/<name>` or `fix/<name>` → PR → `main` → `production`.
+   No `development` branch.
 
 ## Rules
 
 - If quality gates fail, STOP. Report the failures. Do not push broken code.
+- **Never push directly to protected branches** (`main`, `production`).
+  Always go through a PR, even for urgent hotfixes.
 - If push fails, resolve and retry until it succeeds.
 - Don't skip checks. Don't guess. Always verify.
 - Every push costs real money (CI, deployments). Treat it accordingly.

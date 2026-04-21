@@ -6,13 +6,21 @@ argument-hint: [source-dir-or-files]
 
 # /plan-draft — Generate a PLAN from source docs
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → ★PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE  │
+│ ★ YOU ARE HERE: Synthesize pitch + research into a structured PLAN.     │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Read all documents in `$ARGUMENTS` (a directory or space-separated file paths)
 and synthesize them into a single, coherent PLAN following the canonical template.
 
 ## Process
 
 1. **Read the template.** Find `templates/PLAN-TEMPLATE.md` in the
-   claude-workflow-skills repo (check `~/.claude/skills/plan-draft/` symlink
+   claude-workflow-skills repo (check `~/.claude/skills/hs-sw-plan-draft/` symlink
    to locate the repo root, or search for it). This defines the target structure.
 
 2. **Read all source documents.** Read every file in the provided directory
@@ -22,6 +30,10 @@ and synthesize them into a single, coherent PLAN following the canonical templat
    - Meeting notes or brainstorm docs
    - Existing partial plans
    - README or handoff docs
+   - **`planning-context/`** — if this subdirectory exists, read everything in
+     it. This is the evidence bag: research, competitor analysis, PRD drafts,
+     screenshots, reference material that informed the pitch. These inputs
+     ground the plan in evidence rather than assumption.
 
 3. **Synthesize, don't concatenate.** The goal is a single coherent plan, not
    a paste-together of source docs. For each template section:
@@ -30,8 +42,8 @@ and synthesize them into a single, coherent PLAN following the canonical templat
    - Fill gaps with reasonable inferences (flag what you inferred)
    - Maintain traceability: note which source doc informed each section
 
-4. **Write the PLAN.** Output to a file path that makes sense for the project
-   (e.g., `docs/prds/versions/v0.XX/PLAN.md` or just `PLAN.md`).
+4. **Write the PLAN.** Output to `docs/features/<feature-name>/PLAN.md`.
+   If the input is a feature directory, write PLAN.md inside it.
    Ask the user for the output path if unclear.
 
 5. **Flag gaps.** After writing, explicitly list:
@@ -93,3 +105,14 @@ Paragraphs describing flows are a red flag — they hide complexity and are hard
 - Write in the same voice as the source docs. Don't sanitize personality.
 - Use extended thinking for synthesis.
 - **No diagrams = incomplete plan.** Do not write "diagram TBD" — draw it now.
+- **CLI is a first-class deliverable.** Every feature that has an API or UI MUST
+  also specify its CLI commands. Include a "CLI Interface" section in the plan
+  listing: command names, flags, arguments, and expected output. All commands
+  MUST support `--json` for agent/machine consumption. A plan without CLI
+  commands for its features is incomplete — same as missing diagrams.
+
+## Next Steps
+
+After generating the PLAN, tell the user:
+- "Run `/plan-review` to refine this plan (typically 4-5 rounds of review)."
+- "Then `/beads-create` to decompose into executable tickets."

@@ -6,6 +6,14 @@ argument-hint: [component-or-directory]
 
 # /ux-polish — World-Class UX Review
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE   │
+│ ★ YOU ARE HERE: Wave gate (UX lens) or standalone review.               │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Scrutinize every aspect of the application workflow and look for things that
 are sub-optimal, unintuitive, or unpolished. Target: Stripe-level apps.
 
@@ -33,6 +41,16 @@ are sub-optimal, unintuitive, or unpolished. Target: Stripe-level apps.
    progressive disclosure, responsive breakpoints, no hover-dependent features
 8. **Accessibility** — Contrast ratios (WCAG AA minimum), focus indicators,
    screen reader labels, reduced-motion support
+9. **CLI UX** — CLI is a first-class interface, not an afterthought:
+   - Does every feature accessible via UI/API also have CLI commands?
+   - Do all commands support `--json` for agent/machine consumption?
+   - Is human-friendly output the default? (rich formatting, colors, tables)
+   - Are error messages actionable ("missing --workspace flag") not cryptic?
+   - Is help text (`--help`) complete and useful?
+   - Are command names intuitive and consistent? (e.g., all CRUD follows
+     `<noun> list|show|create|update|delete` pattern)
+   - Is output scannable? (headers, whitespace, alignment for human mode;
+     parseable structure for `--json` mode)
 
 ## Process
 

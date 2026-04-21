@@ -1,53 +1,100 @@
 ---
 name: hs-sw-docs-gen-ext
-description: Extract external-facing documentation from decision docs, PRDs, and implementation into docs/site/
-argument-hint: [source-dir]
+description: Extract external-facing documentation from internal artifacts into docs/site/ — capture now, build site later
+argument-hint: [feature-dir-or-name]
 ---
 
-# /docs-harvest — Harvest External Documentation
+# /docs-external — Harvest External Documentation
 
-At epic or release close, extract the external-facing content from your internal
-artifacts (decision docs, PRDs, plans, implementation) and write clean user
-documentation.
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE   │
+│ ★ YOU ARE HERE: Sprint close — extract user-facing docs to docs/site/.  │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-**Source directory:** `$ARGUMENTS` (e.g., `docs/prds/versions/v0.17/`)
+At feature or sprint close, extract the external-facing content from your
+internal artifacts and write clean user documentation. The site doesn't need
+to exist yet — this captures content into a standard folder structure that
+any static site generator can consume later.
+
+**Feature directory:** `$ARGUMENTS` (e.g., `docs/features/org-management/` or
+`org-management`). If just a name is given, look in `docs/features/<name>/`.
+
+## Output Location
+
+```
+docs/site/
+├── features/                  # Feature-specific docs
+│   ├── org-management/
+│   │   ├── workspaces.md      # Concepts: what workspaces are, hierarchy
+│   │   ├── vaults.md          # Concepts: credential storage, resolution
+│   │   ├── settings.md        # Concepts: inheritance, LLM profiles
+│   │   └── agents.md          # Concepts: visibility, discovery, install
+│   └── agent-builder/
+│       └── ...
+├── guides/                    # How-to guides (cross-feature)
+│   └── <task>.md              # e.g., create-workspace.md, manage-credentials.md
+├── reference/
+│   ├── api/                   # API reference
+│   │   └── <resource>.md      # e.g., workspaces.md, vaults.md, agents.md
+│   └── cli/                   # CLI reference (first-class interface)
+│       └── <command>.md       # One doc per command group, with --json schemas
+└── _meta.yaml                 # Site config placeholder (for future site generator)
+```
+
+**This is just markdown.** No site generator needed yet. When you eventually
+pick one (Nextra, Docusaurus, Mintlify), point it at `docs/site/` and add
+config.
 
 ## Process
 
-1. **Read all source artifacts** in the provided directory:
-   - Decision docs → architecture and concepts
-   - PLAN.md → feature overview and capabilities
-   - PRDs → user-facing feature descriptions
-   - Implementation code → API reference, configuration
+1. **Read all source artifacts** for the feature:
+   - `docs/features/<name>/PLAN.md` → feature overview and capabilities
+   - `docs/features/<name>/architecture.md` → system design (if exists, from /docs-gen-int)
+   - `docs/features/<name>/api.md` → API details (if exists)
+   - `docs/features/<name>/cli.md` → CLI details (if exists)
+   - Decision docs → concepts and rationale
+   - Implementation code → API reference, CLI commands, configuration
 
 2. **Identify external-facing content.** For each artifact, extract ONLY what
    an end user or integrator needs to know. Strip:
-   - Internal debate and alternatives-considered (keep in release-docs instead)
+   - Internal debate and alternatives-considered (keep in internal docs)
    - Implementation details that don't affect users
    - Team workflow and process notes
    - Temporary workarounds and tech debt notes
 
-3. **Write docs** to `docs/site/` (create if missing) in a format compatible
-   with any static site generator:
-   ```
-   docs/site/
-   ├── concepts/          # Key concepts and mental models
-   │   └── <concept>.md
-   ├── guides/            # How-to guides for common tasks
-   │   └── <guide>.md
-   ├── architecture/      # System design (external view)
-   │   └── <component>.md
-   └── reference/         # API reference, configuration
-       └── <endpoint>.md
-   ```
+3. **Write docs** to the structure above:
+
+   ### Feature docs (`docs/site/features/<name>/`)
+   - One file per major concept the feature introduces
+   - Written for users: "what is this, why should I care, how does it work"
+   - Include examples and diagrams
+
+   ### Guides (`docs/site/guides/`)
+   - Task-oriented: "How to create a workspace", "How to manage credentials"
+   - Step-by-step with code examples (both UI steps and CLI commands)
+   - Cross-feature guides go here (e.g., "Getting started" spans multiple features)
+
+   ### API reference (`docs/site/reference/api/`)
+   - One file per resource (workspaces, vaults, agents, etc.)
+   - Endpoint, method, request/response schemas, auth, errors
+   - Copy from internal api.md but rewrite for external audience
+
+   ### CLI reference (`docs/site/reference/cli/`)
+   - One file per command group (workspace, vault, agent, etc.)
+   - Command syntax, flags, arguments
+   - `--json` output schemas
+   - Example usage (both human-friendly and JSON mode)
 
 4. **Each doc** should have frontmatter:
    ```yaml
    ---
    title: "<title>"
    description: "<one-line description>"
-   category: concept | guide | architecture | reference
-   version: <release version this was harvested from>
+   category: feature | guide | api-reference | cli-reference
+   feature: <feature-name>
    source_artifacts:
      - <path to source doc>
    ---
@@ -58,10 +105,16 @@ documentation.
 
 ## Rules
 
+- **Auto-write everything.** Create all directories (`docs/site/features/<name>/`,
+  `docs/site/guides/`, `docs/site/reference/api/`, `docs/site/reference/cli/`)
+  if they don't exist, then write all docs directly. Do NOT ask the user for
+  confirmation before writing. Do NOT present content and wait for approval.
+  Extract and write.
 - Write for the external reader. They don't know your internal terminology
   unless you define it.
 - Each doc must stand alone — no "see the PRD for details."
 - Don't create empty placeholder docs. Only write docs where source material
   exists.
 - If a concept or feature isn't ready for public docs, skip it.
+- Include CLI examples alongside API examples — CLI is a first-class interface.
 - Use extended thinking for content extraction.

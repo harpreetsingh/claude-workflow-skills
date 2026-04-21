@@ -6,6 +6,14 @@ argument-hint: [directory]
 
 # /test-coverage — Test Gap Analysis
 
+```
+┌─ THE FLYWHEEL ──────────────────────────────────────────────────────────┐
+│ SHAPE → PLAN → REVIEW×N → DECOMPOSE → SPRINT PLAN → EXECUTE → CLOSE   │
+│ ★ YOU ARE HERE: During sprint (role switching) or sprint close.         │
+│ See FLYWHEEL.md for the full development lifecycle.                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 Analyze the codebase (or `$ARGUMENTS` directory) for test coverage gaps and
 create beads for every missing test.
 
@@ -25,8 +33,14 @@ Before creating beads, understand the project's test infrastructure:
 2. **Integration tests** — Are there e2e integration test scripts?
    - Detailed logging so failures are diagnosable
    - Cover critical user workflows end-to-end
-3. **Edge cases** — Are boundary conditions tested?
-4. **Existing test quality** — Are mocks hiding real bugs? Are assertions
+3. **CLI tests** — Does every CLI command have tests?
+   - Test both human-friendly output and `--json` output
+   - Test error cases (missing required flags, invalid input)
+   - Test that `--json` output is valid JSON and contains expected fields
+   - CLI is a first-class interface — untested CLI commands are as bad as
+     untested API endpoints
+4. **Edge cases** — Are boundary conditions tested?
+5. **Existing test quality** — Are mocks hiding real bugs? Are assertions
    meaningful or just checking that code ran without crashing?
 
 ## Process
@@ -40,7 +54,7 @@ Before creating beads, understand the project's test infrastructure:
    - Specific test scenarios and edge cases to cover
    - Which test framework and patterns to use (match existing conventions)
    - Dependencies on implementation beads if applicable
-5. Overlay dependency structure
+5. Wire dependencies: test beads block their impl beads (`bd dep add <impl-id> <test-id>`)
 
 ## Rules
 
