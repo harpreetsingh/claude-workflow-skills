@@ -53,6 +53,14 @@ Run the full pre-push checklist, commit, and push. Work is NOT done until
    Note: beads state lives on Railway Dolt (remote). Every `bd` write lands
    immediately — no local export or sync step needed.
 
+4.5 **Docs graduation** — Check whether any `docs/projects/features/<name>/` directory
+   appears in the changeset (from `git status`). If so, this is a feature close:
+   ```
+   git mv docs/projects/features/<name>/ docs/resources/features/<name>/
+   ```
+   This is its own commit: `"docs: graduate <name> from projects to resources"`.
+   Commit it before proceeding to the remaining changes.
+
 5. **Commit** — Create a series of logically connected commits, NOT one giant
    commit. Analyze all changed files and group them by coherent change:
    - Feature + its tests = one commit

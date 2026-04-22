@@ -134,8 +134,8 @@ the full picture.
 │    5-round interview: Problem → Appetite → Solution → Rabbit Holes      │
 │         → No-Gos                                                        │
 │         ↓                                                               │
-│    OUTPUT: docs/features/<slug>/pitch.md                                │
-│            docs/features/<slug>/planning-context/                       │
+│    OUTPUT: docs/projects/features/<slug>/pitch.md                       │
+│            docs/projects/features/<slug>/planning-context/              │
 │                                                                         │
 │    ✓ GitHub Issue updated with pitch link                               │
 │    ✓ Label: ready-to-bet                                                │
@@ -144,23 +144,23 @@ the full picture.
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 2. PLANNING                                         Human + Claude     │
 │                                                                         │
-│    /plan-draft docs/features/<slug>/                                    │
+│    /plan-draft docs/projects/features/<slug>/                           │
 │         ↓                                                               │
 │    Reads pitch.md + planning-context/ → synthesizes PLAN.md             │
 │    (architecture, deliverables, CLI commands, diagrams)                  │
 │         ↓                                                               │
-│    /plan-review docs/features/<slug>/PLAN.md    (repeat 4-5×)           │
+│    /plan-review docs/projects/features/<slug>/PLAN.md    (repeat 4-5×)  │
 │         ↓                                                               │
 │    Each round: severity-rated proposals → user approves → apply         │
 │    Converges after 4-5 rounds                                           │
 │         ↓                                                               │
-│    OUTPUT: docs/features/<slug>/PLAN.md (refined)                       │
+│    OUTPUT: docs/projects/features/<slug>/PLAN.md (refined)              │
 └────────────────────────────────────────┬────────────────────────────────┘
                                          ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 3. DECOMPOSITION                                    Human + Claude     │
 │                                                                         │
-│    /beads-create docs/features/<slug>/PLAN.md                           │
+│    /beads-create docs/projects/features/<slug>/PLAN.md                  │
 │         ↓                                                               │
 │    PLAN → epics → tasks + TDD test beads                                │
 │    Wires dependencies (test beads block impl beads)                     │
@@ -182,7 +182,7 @@ the full picture.
 │    → domain balance → team topology → ASCII diagram                     │
 │         ↓                                                               │
 │    OUTPUT: tmp/sprint-exec-plan.md                                      │
-│            docs/features/<slug>/sprint-plan.md (persistent copy)        │
+│            docs/projects/features/<slug>/sprint-plan.md (persistent)    │
 │                                                                         │
 │    Optional: /sprint-go --dry-run  (preview without launching)          │
 └────────────────────────────────────────┬────────────────────────────────┘
@@ -228,16 +228,16 @@ the full picture.
 │  ┌─── Sprint Close ────────────────────────────────────────────────┐    │
 │  │  1. Final quality gates                                         │    │
 │  │  2. /docs-gen-int → architecture.md, api.md, cli.md, etc.      │    │
-│  │  3. /docs-gen-ext → docs/site/features/, guides/, reference/    │    │
+│  │  3. /docs-gen-ext → docs/areas/site/features/, guides/, ref/   │    │
 │  │  4. /fresh-eyes <feature-dir> (code + plan + docs + beads)      │    │
 │  │  5. /land-the-plane → commit + push                             │    │
 │  │  6. Lifecycle bead completed, final checkpoint written           │    │
 │  │  7. Summary to user → shutdown                                  │    │
 │  └─────────────────────────────────────────────────────────────────┘    │
 │                                                                         │
-│    OUTPUT: docs/features/<slug>/sprint-state.md (completed)             │
-│            docs/features/<slug>/architecture.md, api.md, cli.md, ...    │
-│            docs/site/features/<slug>/... , guides/, reference/          │
+│    OUTPUT: docs/projects/features/<slug>/sprint-state.md (completed)    │
+│            docs/projects/features/<slug>/architecture.md, api.md, ...   │
+│            docs/areas/site/features/<slug>/... , guides/, reference/    │
 │            All beads labeled qa-passed (human closes after review)       │
 └────────────────────────────────────────┬────────────────────────────────┘
                                          ↓
@@ -288,7 +288,7 @@ Read the relevant skill/agent files and include:
 ## Artifact Map
 
 ```
-docs/features/<slug>/
+docs/projects/features/<slug>/          ← active work (during feature)
 ├── pitch.md              ← /shape
 ├── planning-context/     ← /shape (evidence bag)
 ├── PLAN.md               ← /plan-draft → /plan-review ×4-5
@@ -301,7 +301,10 @@ docs/features/<slug>/
 ├── what-shipped.md       ← /docs-gen-int
 └── lessons.md            ← /docs-gen-int
 
-docs/site/
+docs/resources/features/<slug>/         ← after /land-the-plane (feature shipped)
+└── (same files, moved by land-the-plane graduation step)
+
+docs/areas/site/
 ├── features/<slug>/      ← /docs-gen-ext (concept docs)
 ├── guides/               ← /docs-gen-ext (how-to guides)
 ├── reference/api/        ← /docs-gen-ext (API reference)

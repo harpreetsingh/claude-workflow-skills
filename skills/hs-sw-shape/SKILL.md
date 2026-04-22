@@ -15,7 +15,7 @@ argument-hint: [feature-name-or-gh-issue]
 ```
 
 Run a 5-round shaping interview for a feature and write the output to
-`docs/features/<slug>/pitch.md` in the current project.
+`docs/projects/features/<slug>/pitch.md` in the current project.
 
 **Usage:**
 ```
@@ -47,7 +47,7 @@ If `$ARGUMENTS` is empty, ask: "What feature are we shaping?"
 Derive a slug from the feature name/ID (lowercase, hyphens, no spaces).
 Example: "#42: Skill Search Redesign" → `skill-search-redesign`
 
-Check if `docs/features/<slug>/pitch.md` already exists. If so, ask: "A pitch
+Check if `docs/projects/features/<slug>/pitch.md` already exists. If so, ask: "A pitch
 already exists at that path. Continue from it, or start fresh?"
 
 ### Step 1 — Open the interview
@@ -138,9 +138,9 @@ Then ask: "Anything else you want to call out before I write the pitch?"
 
 Tell the user: "Got it. Writing the pitch now."
 
-Create the directory if it doesn't exist: `docs/features/<slug>/`
+Create the directory if it doesn't exist: `docs/projects/features/<slug>/`
 
-Write `docs/features/<slug>/pitch.md` using the structure below. Do NOT ask for
+Write `docs/projects/features/<slug>/pitch.md` using the structure below. Do NOT ask for
 more input at this stage — synthesize from the conversation.
 
 ---
@@ -207,22 +207,22 @@ User clicks skill → added to agent
 
 ## After Writing
 
-Create `docs/features/<slug>/planning-context/` if it doesn't exist.
+Create `docs/projects/features/<slug>/planning-context/` if it doesn't exist.
 
 If the user shared any research, screenshots, competitor analysis, PRD drafts,
 or reference material during the shaping interview, save them into
 `planning-context/`. If the user referenced external links or docs, note them
 in a `planning-context/sources.md` file.
 
-Tell the user the pitch was written at `docs/features/<slug>/pitch.md`, then say:
+Tell the user the pitch was written at `docs/projects/features/<slug>/pitch.md`, then say:
 
 > "Next steps:
 > 1. Drop any research, screenshots, or competitor analysis into
->    `docs/features/<slug>/planning-context/` — this is the evidence bag for
+>    `docs/projects/features/<slug>/planning-context/` — this is the evidence bag for
 >    planning decisions
 > 2. Link this pitch in the GitHub issue description
 > 3. Add the `ready-to-bet` label on the GitHub issue
-> 4. When the team co-opts it, run `/hs-sw-plan-draft docs/features/<slug>/` to produce PLAN.md"
+> 4. When the team co-opts it, run `/hs-sw-plan-draft docs/projects/features/<slug>/` to produce PLAN.md"
 
 ---
 

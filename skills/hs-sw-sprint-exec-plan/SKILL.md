@@ -122,7 +122,7 @@ Director (Opus) — coordinator only, never implements
 ### Step 9 — Persist + Present
 
 - Determine the feature directory. Look at the beads epic or ask the user:
-  "What feature directory should I use? (e.g., `docs/features/org-management/`)"
+  "What feature directory should I use? (e.g., `docs/projects/features/org-management/`)"
 - Write full plan to `tmp/sprint-exec-plan.md` (for sprint-go to read)
 - **Also write to `<feature_dir>/sprint-plan.md`** — this is the persistent copy
   that lives alongside PLAN.md and pitch.md. Include the `feature_dir` path in

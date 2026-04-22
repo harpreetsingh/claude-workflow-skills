@@ -62,7 +62,7 @@ the Director would do.
 ### Sprint Close
 1. Quality gates (full suite)
 2. docs-gen-int → writes architecture.md, api.md, cli.md, etc. to <feature_dir>/
-3. docs-gen-ext → writes to docs/site/features/<name>/, guides/, reference/
+3. docs-gen-ext → writes to docs/areas/site/features/<name>/, guides/, reference/
 4. fresh-eyes → cold-read audit of entire <feature_dir> (code + plan + docs + beads)
 5. land-the-plane → commit + push
 6. Lifecycle bead marked complete, final checkpoint written
@@ -72,7 +72,7 @@ the Director would do.
 - Total waves: N
 - Estimated tickets: N (N impl + N test)
 - Artifacts produced: sprint-plan.md, sprint-state.md, architecture.md, api.md,
-  cli.md, data-model.md, what-shipped.md, lessons.md, docs/site/...
+  cli.md, data-model.md, what-shipped.md, lessons.md, docs/areas/site/...
 ```
 
 4. **Flag risks:** highlight any beads that look problematic (missing acceptance
@@ -107,7 +107,7 @@ the Director would do.
 - `Agent(subagent_type="hs-sw-sprint-director", name="director", run_in_background=true)`
 - Pass the FULL sprint brief as the prompt, including:
   - Complete `tmp/sprint-exec-plan.md` content
-  - **`feature_dir`** path (e.g., `docs/features/org-management/`) — the Director
+  - **`feature_dir`** path (e.g., `docs/projects/features/org-management/`) — the Director
     writes sprint-state.md checkpoints here and reads sprint-plan.md for recovery
   - Team topology (worker names, types, model tiers, ticket assignments)
   - Team name to create: `sprint-<date>-<project>`
@@ -132,7 +132,7 @@ the Director would do.
 - Wave gates are hard — no Wave N+1 work until gate passes (QA + quality gates + review flywheel + smoke test)
 - Review flywheel: 3 parallel lenses (correctness, security, compaction) + UX for frontend waves
 - Review agents are ephemeral — spawned fresh per wave, shut down after reporting
-- Sprint close includes docs generation: `/hs-sw-docs-gen-int` (internal) + `/hs-sw-docs-gen-ext` (external to `docs/site/`)
+- Sprint close includes docs generation: `/hs-sw-docs-gen-int` (internal) + `/hs-sw-docs-gen-ext` (external to `docs/areas/site/`)
 - Workers are general-purpose (full tool access)
 - NO Tasks — beads (`bd`) is the only tracking system
 - Launcher exits immediately after spawning Director

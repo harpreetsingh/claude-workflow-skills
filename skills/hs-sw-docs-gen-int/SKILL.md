@@ -18,15 +18,15 @@ At feature close (or sprint end), synthesize all the scattered artifacts into
 clean, comprehensive internal documentation. Someone joining 6 months from now
 should read this and understand what was built, why, and how it works.
 
-**Feature directory:** `$ARGUMENTS` (e.g., `docs/features/org-management/` or
-`org-management`). If just a name is given, look in `docs/features/<name>/`.
+**Feature directory:** `$ARGUMENTS` (e.g., `docs/projects/features/org-management/` or
+`org-management`). If just a name is given, look in `docs/projects/features/<name>/`.
 
 ## Output Location
 
 Write docs alongside the feature's existing artifacts:
 
 ```
-docs/features/<feature-name>/
+docs/projects/features/<feature-name>/
 ├── pitch.md                  ← already exists (from /shape)
 ├── PLAN.md                   ← already exists (from /plan-draft)
 ├── running-design.md         ← may exist (design notes)

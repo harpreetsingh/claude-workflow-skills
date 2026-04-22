@@ -38,10 +38,10 @@ Determine what you're reviewing and apply the matching lens:
 | `PLAN.md`, `**/PLAN*.md` | **Plan** |
 | `pitch.md` | **Pitch** |
 | `planning-context/`, research docs | **Research** |
-| `docs/features/**/architecture.md`, `api.md`, `cli.md`, etc. | **Internal Docs** |
-| `docs/site/**` | **External Docs** |
+| `docs/projects/features/**/architecture.md`, `api.md`, `cli.md`, etc. | **Internal Docs** |
+| `docs/areas/site/**` | **External Docs** |
 | `beads-xxx`, `--beads` | **Beads** |
-| Mixed directory (e.g., `docs/features/org-management/`) | **All types found** — run each lens |
+| Mixed directory (e.g., `docs/projects/features/org-management/`) | **All types found** — run each lens |
 
 ## Process
 
@@ -113,7 +113,7 @@ Determine what you're reviewing and apply the matching lens:
 - Stale content: anything describing behavior that was changed or removed?
 - Gaps: is there implemented functionality with no documentation?
 
-### External Docs (docs/site/)
+### External Docs (docs/areas/site/)
 
 - Can an external reader understand this without internal context?
 - Undefined jargon or internal terminology?

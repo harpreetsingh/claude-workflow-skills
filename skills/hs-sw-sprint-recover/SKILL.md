@@ -22,7 +22,7 @@ reconciles bead state with reality, and produces a clean backlog ready for
 
 **Usage:**
 ```
-/sprint-recover docs/features/org-management/
+/sprint-recover docs/projects/features/org-management/
 /sprint-recover /tmp/org-management-triage-heatmap.md
 /sprint-recover   ← prompts for feature dir or triage doc
 ```
@@ -31,7 +31,7 @@ reconciles bead state with reality, and produces a clean backlog ready for
 
 ### Step 1 — Find the inputs
 
-If `$ARGUMENTS` is a feature directory (e.g., `docs/features/org-management/`):
+If `$ARGUMENTS` is a feature directory (e.g., `docs/projects/features/org-management/`):
 - Read `PLAN.md` for intended scope
 - Read `sprint-plan.md` for the previous sprint topology (if exists)
 - Read `sprint-state.md` for where the sprint stopped (if exists)

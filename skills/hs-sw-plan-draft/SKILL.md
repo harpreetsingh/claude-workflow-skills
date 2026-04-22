@@ -42,7 +42,7 @@ and synthesize them into a single, coherent PLAN following the canonical templat
    - Fill gaps with reasonable inferences (flag what you inferred)
    - Maintain traceability: note which source doc informed each section
 
-4. **Write the PLAN.** Output to `docs/features/<feature-name>/PLAN.md`.
+4. **Write the PLAN.** Output to `docs/projects/features/<feature-name>/PLAN.md`.
    If the input is a feature directory, write PLAN.md inside it.
    Ask the user for the output path if unclear.
 
