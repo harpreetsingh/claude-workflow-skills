@@ -57,7 +57,7 @@ Before wave analysis, verify TDD structure:
 Apply tiers via `bd update <id> --add-label tier:<tier>`:
 
 - `opus`: architectural decisions, complex multi-file refactors, high fan-out (blocks 3+), protocol design, anything moderately complex or above
-- `sonnet`: standard features, API endpoints, UI components, config, boilerplate, test stubs, docs, mechanical tasks
+- `sonnet`: standard features, API endpoints, UI components, config, boilerplate, test writing, docs, mechanical tasks
 
 Do NOT use `haiku` tier. All sprint work uses either opus or sonnet.
 

@@ -45,7 +45,11 @@ be changed to make the system work better for users?
    - Does this bead make sense? Is it necessary?
    - Is the scope right? Too big = hard to execute. Too granular = overhead.
      A good task is 1-4 hours of focused agent work.
-   - Does it have concrete, verifiable acceptance criteria?
+   - Does it have **mechanically verifiable** acceptance criteria? Each
+     criterion must be checkable by grep, curl, test output, or file read.
+     If a criterion says "it works" or "handles errors" — rewrite it with
+     the specific observable (endpoint returns X, component renders Y,
+     command outputs Z). Vague criteria are the root cause of stubs passing QA.
    - Are dependencies correct and complete?
    - Is the description self-contained enough for an agent with no prior context?
    - Could beads be merged (overlapping scope), split (too large), reordered

@@ -28,7 +28,17 @@ granular set of beads with full dependency structure.
    - Detailed description including:
      - Which plan section this implements and why
      - Background and reasoning/justification
-     - Acceptance criteria (concrete, verifiable conditions)
+     - Acceptance criteria — **mechanically verifiable** conditions that a QA
+       agent can check with grep, curl, test output, or file reads. Each
+       criterion must specify a CONCRETE observable:
+       - BAD: "user can search" / "it works" / "handles errors"
+       - GOOD: "GET /api/search?q=test returns 200 with `results` array"
+       - GOOD: "SearchBar component renders input with placeholder 'Search...'"
+       - GOOD: "`bd search test` returns matching beads in table format"
+       - GOOD: "pytest test_search.py passes with 5+ assertions"
+       If a criterion can't be verified by reading code or running a command,
+       rewrite it until it can. Vague criteria produce vague tests which pass
+       with stubs.
      - CLI commands this bead must deliver (if applicable) — command name,
        flags, `--json` output format. A bead that delivers an API endpoint
        or UI feature MUST also specify its CLI counterpart.

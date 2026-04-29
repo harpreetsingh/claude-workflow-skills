@@ -29,6 +29,28 @@ the latest commits — cast a wide net and go deep.
    - Reliability issues (unhandled errors, race conditions, resource leaks)
    - Violations of project conventions (CLAUDE.md, AGENTS.md)
    - Incomplete implementations (TODO/FIXME/HACK left behind, half-finished features)
+   - **Stubs and fakes disguised as real code** — this is the highest-priority
+     check. Run a mechanical scan first:
+     ```bash
+     grep -rn -e 'TODO' -e 'FIXME' -e 'HACK' -e 'XXX' -e 'placeholder' \
+       -e 'NotImplementedError' -e '^\s*pass$' -e 'stub' -e 'dummy' \
+       -e 'mock.*implementation' -e 'fake.*response' -e 'hardcoded.*return' \
+       --include="*.py" --include="*.ts" --include="*.tsx" \
+       <scope> | grep -v test | grep -v __pycache__
+     ```
+     Then manually verify: functions that import libraries but don't call them,
+     functions ≤3 lines with complex responsibilities, empty catch blocks,
+     functions that ignore their arguments and return constants
+   - **Test fraud** — tests that don't actually test:
+     ```bash
+     grep -rn -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+       -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xtest(' \
+       -e 'assert True' -e 'assert 1' -e '# assert' -e '// expect' \
+       --include="*.py" --include="*.ts" --include="*.test.*" \
+       <scope>
+     ```
+     Also check: are assertions testing specific values or just existence?
+     `assert result is not None` passes with any stub return.
 5. For each issue:
    - Diagnose the underlying root cause with first-principle analysis
    - Fix it directly in the code

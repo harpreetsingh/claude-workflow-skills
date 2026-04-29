@@ -42,6 +42,16 @@ Before creating beads, understand the project's test infrastructure:
 4. **Edge cases** — Are boundary conditions tested?
 5. **Existing test quality** — Are mocks hiding real bugs? Are assertions
    meaningful or just checking that code ran without crashing?
+   - Scan for skipped/disabled tests: `@pytest.mark.skip`, `@xfail`, `.skip()`,
+     `xit()`, `xtest()` — these are coverage holes disguised as coverage
+   - Scan for trivially passing assertions: `assert True`, `assert 1 == 1`,
+     `expect(true).toBe(true)` — these are fake tests
+   - Scan for weak assertions: `assert x is not None`, `expect(x).toBeDefined()`
+     alone — these pass with any stub return and don't verify real behavior
+   - Scan for commented-out assertions: `# assert`, `// expect` — these were
+     probably commented out to make the suite pass
+   - Excessive mocking: if more than half the test is mock setup, the test
+     is testing mocks, not code
 
 ## Process
 

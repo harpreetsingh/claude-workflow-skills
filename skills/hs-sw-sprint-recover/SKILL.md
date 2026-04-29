@@ -55,9 +55,27 @@ If no triage document exists, perform a live triage:
 1. `bd list --status=closed` + `bd list --label qa-passed` — what claims to be done?
 2. For each "done" bead, quick-verify: do the files it claims to have changed exist?
    Do tests pass? Does the acceptance criteria evidence hold up?
-3. `bd list --status=open` — what was never started?
-4. Classify each bead as GREEN / YELLOW / RED
-5. Write the triage to `<feature_dir>/planning-context/sprint-recovery-triage.md`
+3. **Stub scan** — run on ALL files from the sprint:
+   ```bash
+   grep -rn -e 'TODO' -e 'FIXME' -e 'HACK' -e 'placeholder' \
+     -e 'NotImplementedError' -e '^\s*pass$' -e 'stub' -e 'dummy' \
+     -e 'mock.*implementation' -e 'fake.*response' -e 'hardcoded.*return' \
+     --include="*.py" --include="*.ts" --include="*.tsx" \
+     <sprint scope> | grep -v __pycache__
+   ```
+   Any match on a "done" bead's files → that bead is YELLOW or RED, not GREEN.
+4. **Test integrity scan** — run on ALL test files from the sprint:
+   ```bash
+   grep -rn -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+     -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xtest(' \
+     -e 'assert True' -e 'assert 1' -e '# assert' -e '// expect' \
+     --include="*.py" --include="*.ts" --include="*.tsx" \
+     <sprint scope>
+   ```
+   Any match → the "passing" tests are fraudulent. That bead is RED.
+5. `bd list --status=open` — what was never started?
+6. Classify each bead as GREEN / YELLOW / RED
+7. Write the triage to `<feature_dir>/planning-context/sprint-recovery-triage.md`
 
 ### Step 3 — Beads surgery
 

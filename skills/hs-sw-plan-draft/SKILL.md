@@ -110,6 +110,17 @@ Paragraphs describing flows are a red flag — they hide complexity and are hard
   listing: command names, flags, arguments, and expected output. All commands
   MUST support `--json` for agent/machine consumption. A plan without CLI
   commands for its features is incomplete — same as missing diagrams.
+- **Testing strategy is a first-class deliverable.** Every plan MUST include a
+  "Testing Strategy" section that identifies:
+  - Which deliverables need tests (any with an API, business logic, UI component,
+    or data model)
+  - What kind of tests (unit, integration, CLI, e2e)
+  - Key test scenarios for each deliverable (happy path + critical edge cases)
+  - What should NOT be mocked (real DB, real API calls) vs. boundary mocks
+  
+  This section feeds directly into `/beads-create` which creates TDD test beads.
+  A plan without a testing strategy will produce beads without test coverage —
+  and untested code ships stubs. Same severity as missing diagrams or CLI.
 
 ## Next Steps
 

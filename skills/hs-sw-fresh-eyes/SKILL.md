@@ -59,6 +59,27 @@ Determine what you're reviewing and apply the matching lens:
 
 ### Code
 
+- **Stub/fake scan (run first, mechanical):**
+  ```bash
+  grep -rn -e 'TODO' -e 'FIXME' -e 'HACK' -e 'XXX' -e 'placeholder' \
+    -e 'NotImplementedError' -e '^\s*pass$' -e 'stub' -e 'dummy' \
+    -e 'mock.*implementation' -e 'fake.*response' -e 'hardcoded.*return' \
+    --include="*.py" --include="*.ts" --include="*.tsx" \
+    <scope> | grep -v test | grep -v __pycache__
+  ```
+  Then manually verify: functions ≤3 lines with complex responsibilities,
+  imports present but never called, arguments received but ignored, empty
+  catch blocks silently swallowing errors, hardcoded return values
+- **Test integrity scan (run second, mechanical):**
+  ```bash
+  grep -rn -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+    -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xtest(' \
+    -e 'assert True' -e 'assert 1' -e '# assert' -e '// expect' \
+    --include="*.py" --include="*.ts" --include="*.tsx" --include="*.test.*" \
+    <scope>
+  ```
+  Also check: are assertions testing specific values or just existence/truthiness?
+  Tests that only assert `is not None` pass with any stub return.
 - Logic errors, off-by-one, wrong comparison operators
 - Null/undefined handling, missing return statements
 - Type mismatches, incorrect async/await, unhandled promise rejections
@@ -75,6 +96,8 @@ Determine what you're reviewing and apply the matching lens:
 - Are there deliverables described in prose that should be a diagram? (paragraphs describing flows = red flag)
 - Are there diagrams? Every non-trivial plan needs at least one ASCII diagram.
 - CLI commands specified for every API/UI feature? `--json` included?
+- Testing strategy section present? Identifies which deliverables need tests,
+  what kind, key scenarios, and mock boundaries?
 - Acceptance criteria: are they concrete and verifiable, or vague?
 - Scope: anything that looks in-scope but isn't explicitly listed?
 - Dependencies between deliverables: are they stated? Any missing?

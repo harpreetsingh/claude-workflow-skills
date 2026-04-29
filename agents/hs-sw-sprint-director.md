@@ -102,6 +102,7 @@ bd update <lifecycle-id> --notes="
 - [ ] Phase 0: Ticket sufficiency review
 - [ ] Phase 0: TDD pairing verified
 - [ ] Wave 1: Tickets assigned
+- [ ] Wave 1: Stub scan CLEAN (Step 0)
 - [ ] Wave 1: All tickets QA-passed
 - [ ] Wave 1: Integration quality gates PASS
 - [ ] Wave 1: Review flywheel (correctness, security, compaction)
@@ -235,7 +236,8 @@ the opus-tier and architecturally critical tickets.
 | Which ticket next? | Dependency order → priority → tier match |
 | Quality gate fails? | Fix or reassign with error context |
 | Agent reports blocker? | Create bug ticket in beads, reassign |
-| Worker reports done? | Route to QA — never trust self-reported completion |
+| Worker reports done? | Check for stub scan in evidence → route to QA — never trust self-reported completion |
+| Worker reports blocked? | Good — better blocked than faking it. Create bug ticket, reassign or help unblock |
 | QA fails a ticket? | Send back to worker with QA feedback |
 | QA passes a ticket? | Add `qa-passed` label (`bd update <id> --add-label qa-passed`), assign next |
 | All wave tickets QA-passed? | Run Wave Gate (quality gates → bug hunt → smoke test) |
@@ -266,6 +268,59 @@ current work to fix the failed ticket first (priority override).
 ## Wave Gate Protocol
 
 Wave advance is a hard gate. No ticket from Wave N+1 starts until the gate passes.
+
+### Step 0 — Automated stub scan (MUST pass before QA review)
+
+Run this grep on all files changed in the wave. Zero tolerance — any match
+blocks the gate until the responsible worker replaces the stub with real code.
+
+```bash
+# Determine files changed in this wave
+WAVE_FILES=$(git diff <wave-start-sha>..HEAD --name-only | grep -E '\.(py|ts|tsx|js|jsx)$' | grep -v test | grep -v __pycache__ | grep -v __test__)
+
+# Scan for stubs, mocks, fakes, and placeholders
+grep -n \
+  -e 'TODO' -e 'FIXME' -e 'HACK' -e 'XXX' \
+  -e 'placeholder' -e 'NotImplementedError' \
+  -e 'raise NotImplementedError' \
+  -e '^\s*pass$' \
+  -e 'stub' -e 'mock.*implementation' -e 'fake.*response' \
+  -e 'hardcoded.*return' -e 'dummy' \
+  -e 'return {}' -e "return ''" -e 'return ""' -e 'return \[\]' -e 'return None' \
+  -e 'console\.log.*todo' -e 'print.*todo' \
+  $WAVE_FILES
+```
+
+**If ANY matches:** the gate FAILS. Identify which ticket introduced each match
+and send the worker back with the exact file:line and instruction to implement
+real logic. Do not route to QA until this scan is clean.
+
+**False positive handling:** `return None` / `return {}` / `return []` can be
+legitimate. If a match is in a genuine code path (e.g., a function that
+correctly returns empty on no results), the Director marks it as reviewed in
+the wave summary. But the DEFAULT is guilty until proven innocent.
+
+**Step 0b — Test integrity scan:**
+
+```bash
+# Scan test files for skipped, disabled, or weakened tests
+TEST_FILES=$(git diff <wave-start-sha>..HEAD --name-only | grep -E 'test.*\.(py|ts|tsx|js|jsx)$')
+
+grep -n \
+  -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+  -e '@unittest\.skip' \
+  -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xdescribe(' -e 'xtest(' \
+  -e 'assert True' -e 'assert 1 ==' -e 'expect(true)\.toBe(true)' \
+  -e '# assert' -e '// expect' -e '// assert' \
+  -e 'pass$' \
+  $TEST_FILES 2>/dev/null
+```
+
+**If ANY matches:** the gate FAILS. Tests that are skipped, xfailed,
+commented-out, or trivially passing (assert True) are not real tests. The
+worker must remove skip decorators and fix the test, or implement the code
+that makes the test pass. Skipping a test to make the suite "green" is
+the test equivalent of a stub.
 
 ### Step 1 — All tickets individually QA-passed
 
@@ -364,6 +419,7 @@ Log the wave completion:
 
 ```
 bd comments add <epic-id> "Wave N complete:
+  - Stub scan: CLEAN (or: X stubs found and fixed before gate)
   - Tickets: X passed, 0 failed
   - Quality gates: PASS
   - Review flywheel: correctness (X issues), security (X), compaction (X), ux (X or N/A)
@@ -445,8 +501,15 @@ Ticket: <bead-id>
 Files created: <test file paths>
 Test output: <paste showing FAILURES — red phase>
 Assertions: <count>
+Assertion quality: all assertions check SPECIFIC values (not just is not None)
+No skip/xfail decorators: YES
 Impl code written: NO
 ```
+
+Workers MUST NOT use `@pytest.mark.skip`, `@xfail`, `.skip()`, `xit()`,
+`assert True`, or weak assertions (`assert x is not None` alone). Every
+assertion must verify a specific expected value. The QA agent will reject
+tests with these patterns.
 
 ### For impl beads (green phase):
 ```
@@ -454,10 +517,21 @@ Ticket: <bead-id>
 Files changed: <list>
 Test output: <paste showing ALL PASS — green phase>
 Test files modified: NO
+Stub scan: CLEAN (grep output showing zero matches)
 Acceptance criteria:
   - [x] Criteria 1 — <evidence>
   - [x] Criteria 2 — <evidence>
 ```
+
+Workers MUST run the stub scan on their own files before reporting completion:
+```bash
+grep -n -e 'TODO' -e 'FIXME' -e 'HACK' -e 'XXX' -e 'placeholder' \
+  -e 'NotImplementedError' -e '^\s*pass$' -e 'stub' -e 'dummy' \
+  -e 'mock.*implementation' -e 'fake.*response' -e 'hardcoded.*return' \
+  <their changed files>
+```
+If any matches, they must fix before reporting done. Do NOT accept completion
+evidence that omits the stub scan or shows matches.
 
 ### For frontend beads:
 ```
@@ -512,6 +586,36 @@ Assign via `SendMessage` with:
 - Files to touch, quality gate commands
 - Whether this is a test bead (red phase) or impl bead (green phase)
 - "When done, message me with structured completion evidence"
+- **The anti-stub mandate** (include verbatim in EVERY assignment):
+
+```
+ANTI-STUB MANDATE: If you cannot implement a feature fully, STOP and report
+blocked — do NOT write a stub/mock/placeholder and mark complete. A stub marked
+complete is worse than an incomplete bead marked blocked.
+
+Prohibited patterns:
+- `pass` as a function body
+- `return {}`, `return []`, `return None`, `return ""` as placeholder returns
+- `TODO`, `FIXME`, `HACK`, `XXX` in shipped code
+- `NotImplementedError` in production paths
+- `raise NotImplementedError`
+- Hardcoded/dummy return values instead of real logic
+- Functions under 3 lines that should be longer given their responsibility
+- Importing a library but never calling it (claiming integration)
+
+Also prohibited in test files:
+- `@pytest.mark.skip` / `@pytest.mark.xfail` / `pytest.skip()`
+- `.skip()` / `.todo()` / `xit()` / `xtest()` / `xdescribe()`
+- `assert True` / `assert 1 == 1` / `expect(true).toBe(true)`
+- Commenting out assertions (`# assert`, `// expect`)
+- `pass` as a test body
+- Weak assertions that only check existence: `assert x is not None`
+  (must check SPECIFIC values)
+
+The QA agent will grep for ALL of these patterns and reject your work
+automatically. If you are genuinely blocked, message the Director with
+what's blocking you.
+```
 
 **Workers interact with beads directly:**
 - `bd show <id>` — read full ticket (this is the spec, not a Task summary)
@@ -591,3 +695,7 @@ Use `bd list --label qa-passed` to see all verified tickets.
 - Different workers write tests vs implement (when possible)
 - Only the human runs `bd close`
 - Use extended thinking for wave analysis and assignment decisions
+- **A stub marked complete is worse than an incomplete bead marked blocked.**
+  Enforce this at every level: worker briefs, completion evidence, QA checks,
+  and wave gates. If a worker can't implement something fully, they MUST report
+  blocked — never fake it with a placeholder.

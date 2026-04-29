@@ -131,10 +131,11 @@ wave-gate, sprint-close, review, recovery).
 │  │  QA VERIFY: tests pass, acceptance criteria met                   │   │
 │  │       ↓                                                           │   │
 │  │  ╔═══ WAVE GATE (hard — blocks Wave N+1) ═══════════════════╗    │   │
+│  │  ║ 0. Stub scan + test integrity scan (grep, mechanical)    ║    │   │
 │  │  ║ 1. All tickets individually QA-passed                     ║    │   │
 │  │  ║ 2. Integration quality gates (ruff + pytest / lint + tsc) ║    │   │
 │  │  ║ 3. Review flywheel (3-4 ephemeral agents in parallel):    ║    │   │
-│  │  ║    • CORRECTNESS — bugs, logic errors, race conditions    ║    │   │
+│  │  ║    • CORRECTNESS — bugs, logic errors, stubs, fakes      ║    │   │
 │  │  ║    • SECURITY — OWASP top 10, injection, auth bypass      ║    │   │
 │  │  ║    • COMPACTION — dead code, over-engineering, bloat       ║    │   │
 │  │  ║    • UX (frontend waves only) — patterns, a11y, states    ║    │   │

@@ -33,6 +33,11 @@ deep review.
      CLI commands? Are `--json` flags included? Is the CLI a first-class
      interface or an afterthought? Flag any feature missing CLI commands as
      a High-severity gap.
+   - **Testing strategy** — does the plan have a "Testing Strategy" section?
+     Does it identify which deliverables need tests, what kind, and key
+     scenarios? Are mock boundaries explicit (what's real vs. mocked)?
+     Flag a missing testing strategy as High-severity — it's the root cause
+     of untested code and stubs surviving sprints.
 3. For EACH proposed change, provide:
    - **Severity**: High (architectural) / Medium (feature-level) / Low (polish)
    - **Analysis**: What's wrong or suboptimal

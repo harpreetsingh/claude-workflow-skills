@@ -57,6 +57,27 @@ Verify the worker wrote failing tests — not implementation code.
   The source module under test should NOT have been modified.
 - [ ] **Tests fail for the right reason** — the error messages indicate "not
   implemented" or "expected X got None/error", not "module not found"
+- [ ] **Test quality scan** — grep for test-weakening patterns. ANY match = FAIL:
+  ```bash
+  grep -n \
+    -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+    -e '@unittest\.skip' -e 'unittest\.skip(' \
+    -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xdescribe(' -e 'xtest(' \
+    -e 'assert True' -e 'assert 1' -e 'expect(true)' \
+    -e '# assert' -e '// expect' -e '// assert' \
+    -e 'pass$' \
+    <test files>
+  ```
+  Reject: `assert True`, trivially passing assertions, skipped/xfail-decorated
+  tests, commented-out assertions, `pass` as test body.
+- [ ] **Assertions are meaningful** — read each assertion. It must check a
+  SPECIFIC value, not just existence:
+  - BAD: `assert result is not None`, `assert len(result) > 0`, `assert True`
+  - GOOD: `assert result.status == "active"`, `assert result == expected_data`
+  - BAD: `expect(result).toBeDefined()` alone
+  - GOOD: `expect(result.name).toBe("test-org")`
+  If assertions only check truthiness/existence/non-None without verifying
+  specific values, FAIL — these tests will pass with any stub return.
 
 ### Impl Beads (Green Phase)
 
@@ -65,6 +86,39 @@ Verify the worker's implementation makes tests pass and meets acceptance criteri
 - [ ] **Tests pass** — run the relevant test suite, confirm ALL PASS
 - [ ] **Test files unchanged** — diff the test files against their state before
   this worker started. Worker should NOT have modified tests to make them pass.
+- [ ] **Test integrity preserved** — even if test files pass the diff check,
+  scan for test-weakening patterns that may have been introduced elsewhere:
+  ```bash
+  grep -rn -e '@pytest\.mark\.skip' -e '@pytest\.mark\.xfail' -e 'pytest\.skip(' \
+    -e '\.skip(' -e '\.todo(' -e 'xit(' -e 'xtest(' \
+    <relevant test files>
+  ```
+  If ANY skip/xfail decorators exist that weren't there before this wave, FAIL.
+  Workers cannot make tests "pass" by skipping them.
+- [ ] **Stub scan CLEAN** — run the automated scan on ALL files the worker changed:
+  ```bash
+  grep -n -e 'TODO' -e 'FIXME' -e 'HACK' -e 'XXX' -e 'placeholder' \
+    -e 'NotImplementedError' -e '^\s*pass$' -e 'stub' -e 'dummy' \
+    -e 'mock.*implementation' -e 'fake.*response' -e 'hardcoded.*return' \
+    -e 'return {}' -e "return ''" -e 'return ""' -e 'return \[\]' \
+    <worker's changed files> | grep -v test | grep -v __pycache__
+  ```
+  ANY match = automatic FAIL. Do not exercise judgment here — fail fast, worker fixes.
+  Only exception: `return []`/`return {}` in a function where empty-collection is the
+  correct behavior for "no results found" — but verify by reading the function.
+- [ ] **Reality check** — for EACH function the worker created or modified:
+  1. **Read the actual file** — do not rely on test results or worker claims
+  2. **Line count floor** — a function with real logic is almost never under 3 lines.
+     If a function body is ≤3 lines (excluding docstring), read it carefully.
+     If it should be doing more, FAIL.
+  3. **Import verification** — if the function claims to call an API, database, or
+     external service: verify the import exists AND the call is actually made in
+     the function body. An import at the top + no usage in the function = fake.
+  4. **Data flow check** — does the function receive input, transform/use it, and
+     return a meaningful result? Or does it ignore its arguments and return a
+     hardcoded value?
+  5. **Catch-block check** — empty `except: pass` or `catch {}` blocks that
+     silently swallow errors are stubs in disguise. FAIL.
 - [ ] **Acceptance criteria met** — for each criterion in the bead:
   - Does the code exist? (grep for key functions, classes, endpoints)
   - Is it a real implementation or a stub/placeholder?

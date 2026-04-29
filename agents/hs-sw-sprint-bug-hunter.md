@@ -75,6 +75,33 @@ Find bugs, logic errors, and integration mismatches.
 - **Dead code or stale references** — imports that point to removed/renamed files,
   function calls to signatures that changed
 - **Copy-paste mistakes** — duplicated blocks with subtle differences
+- **Stubs masquerading as implementations** — the most critical check. Look for:
+  - Functions whose body is `pass`, `return {}`, `return []`, `return None`,
+    `return ""`, or any single hardcoded return that ignores all arguments
+  - Functions that import a library/client at the top of the file but never
+    call it in the function body (faking integration)
+  - Functions ≤3 lines (excluding docstring) that have complex responsibilities
+    — these are suspiciously thin
+  - Empty `except: pass` or `catch (e) {}` blocks that swallow errors silently
+  - `TODO`, `FIXME`, `HACK`, `XXX`, `placeholder`, `NotImplementedError` in
+    production code paths (not tests)
+  - Functions that receive arguments but don't use them (return a constant
+    regardless of input)
+  
+  **Priority: P0.** A stub that passes tests and gets marked "done" is the
+  highest-severity correctness issue — it means the feature doesn't exist.
+- **Tests that don't actually test** — the complement of implementation stubs:
+  - `@pytest.mark.skip` / `@pytest.mark.xfail` / `pytest.skip()` in tests
+  - `.skip()` / `.todo()` / `xit()` / `xtest()` in JS/TS tests
+  - `assert True` / `assert 1 == 1` / `expect(true).toBe(true)` — trivially passing
+  - Assertions that only check existence: `assert x is not None`, `expect(x).toBeDefined()`
+    without checking specific values — these pass with any stub return
+  - Commented-out assertions (`# assert`, `// expect`)
+  - `pass` as a test body
+  - Excessive mocking that means the test doesn't test real behavior
+  
+  **Priority: P0.** Fake tests are as bad as fake implementations — they create
+  false confidence that code works when it doesn't.
 
 **Do NOT file:**
 - Style issues (linters handle this)
